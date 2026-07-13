@@ -1,0 +1,1950 @@
+@font-face {
+  font-family: 'Ndot57';
+  src: url('../Ndot57Caps-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* ── 1. Spacing & Spacers Utilities ── */
+.pt-section-lg {
+  padding-top: calc(var(--sp-9) * 1.5);
+}
+
+.pt-section-xl {
+  padding-top: calc(var(--sp-9) * 2);
+}
+
+.mb-sm {
+  margin-bottom: var(--sp-4);
+}
+
+.mb-md {
+  margin-bottom: var(--sp-6);
+}
+
+.mb-lg {
+  margin-bottom: var(--sp-8);
+}
+
+/* ── 2. Reading Column Widths ── */
+.max-w-600 {
+  max-width: 600px;
+}
+
+.max-w-820 {
+  max-width: 820px;
+}
+
+/* ── 3. Lead Editorial Style ── */
+.lead-editorial {
+  color: var(--c-text-2);
+  font-size: 1.0625rem;
+  line-height: var(--lh-loose);
+}
+
+/* ── 4. Table of Contents Page Index ── */
+.report-toc {
+  max-width: var(--col-w);
+  margin-top: var(--sp-8);
+  margin-bottom: var(--sp-10);
+}
+
+.report-toc__section {
+  margin-bottom: var(--sp-8);
+}
+
+.report-toc__section-title {
+  font-family: var(--font-display);
+  font-size: var(--t-h2);
+  font-weight: 300;
+  color: var(--c-text-1);
+  margin-bottom: var(--sp-4);
+  border-bottom: 1px solid var(--c-border);
+  padding-bottom: var(--sp-2);
+  letter-spacing: var(--ls-tight);
+}
+
+.report-toc__section-num {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  font-weight: 600;
+  color: var(--c-accent);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  margin-bottom: var(--sp-1);
+}
+
+.report-toc__section-name {
+  display: block;
+}
+
+.report-toc__list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.report-toc__item {
+  display: flex;
+  font-size: var(--t-small);
+  color: var(--c-text-2);
+  line-height: var(--lh-snug);
+}
+
+.report-toc__item-link {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: baseline;
+  text-decoration: none;
+  color: inherit;
+}
+
+.report-toc__item-name {
+  font-weight: 500;
+  color: var(--c-text-1);
+  transition: color var(--dur-s) var(--ease);
+}
+
+.report-toc__leader {
+  flex-grow: 1;
+  border-bottom: 1px dotted var(--c-border);
+  margin: 0 var(--sp-3);
+  position: relative;
+  top: -4px;
+}
+
+.report-toc__page {
+  font-family: var(--font-mono);
+  color: var(--c-text-3);
+  font-size: 10px;
+  transition: color var(--dur-s) var(--ease);
+}
+
+/* Hover & active state highlights entire row */
+.report-toc__item-link:hover .report-toc__item-name,
+.report-toc__item-link:focus .report-toc__item-name,
+.report-toc__item-link:active .report-toc__item-name {
+  color: var(--c-accent) !important;
+}
+
+.report-toc__item-link:hover .report-toc__page,
+.report-toc__item-link:focus .report-toc__page,
+.report-toc__item-link:active .report-toc__page {
+  color: var(--c-accent) !important;
+}
+
+/* ── 5. Chapter Module Progress Indicator ── */
+.module-progress {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--c-text-3);
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  margin-bottom: var(--sp-3);
+}
+
+.module-progress__num {
+  font-weight: 500;
+}
+
+/* ── 6. Section Guiding Question ── */
+.guiding-question {
+  border-top: 1px solid var(--c-border);
+  padding-top: var(--sp-5);
+  max-width: var(--col-w);
+  margin-top: var(--sp-6);
+}
+
+.guiding-question__label {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  color: var(--c-text-3);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wide);
+  margin-bottom: var(--sp-2);
+}
+
+.guiding-question__text {
+  font-size: var(--t-small);
+  line-height: var(--lh-base);
+  color: var(--c-text-1);
+  font-weight: 500;
+}
+
+/* ── 7. Cover Layout Refinements ── */
+.cover-hero__tagline {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  font-weight: 600;
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--c-accent);
+  margin-bottom: var(--sp-6);
+}
+
+.cover-hero__footer {
+  margin-top: var(--sp-6);
+  border-top: 1px solid var(--c-border);
+  padding-top: var(--sp-4);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--c-text-3);
+}
+
+/* Bordered variant for summary recaps */
+.chapter-summary--bordered {
+  border-top: 1px solid var(--c-border);
+  padding-top: var(--sp-7);
+  margin-top: var(--sp-9);
+  margin-bottom: var(--sp-8);
+}
+
+/* ── Figcaption spacing: ensure breathing room between caption and takeaway card ── */
+.chart-block__caption {
+  margin-top: var(--sp-4) !important;
+  margin-bottom: var(--sp-4) !important;
+}
+
+/* Ensure takeaway card always has top margin relative to whatever precedes it */
+.takeaway-card {
+  margin-top: var(--sp-6) !important;
+}
+
+/* Figure figure-standard bottom margin should provide enough separation from next article */
+.figure-standard {
+  margin-bottom: var(--sp-10) !important;
+}
+
+/* Extra space between content-block body and any following figure */
+.content-block__body + figure,
+.content-block__body + .chart-block {
+  margin-top: var(--sp-6);
+}
+
+/* ── 8. Metric Dashboard ── */
+.metric-dashboard {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-6);
+  margin-bottom: var(--sp-8);
+  max-width: var(--col-w);
+}
+
+.metric-card {
+  background-color: var(--c-surface-1);
+  border: 1px solid var(--c-border);
+  border-radius: 4px;
+  padding: var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.metric-card__value {
+  font-family: var(--font-sans);
+  font-size: 2.25rem;
+  font-weight: 300;
+  color: var(--c-accent);
+  line-height: var(--lh-none);
+  letter-spacing: var(--ls-tight);
+}
+
+.metric-card__label {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--c-text-1);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wide);
+}
+
+.metric-card__desc {
+  font-family: var(--font-sans);
+  font-size: var(--t-caption);
+  color: var(--c-text-3);
+  line-height: var(--lh-base);
+}
+
+@media (max-width: 600px) {
+  .metric-dashboard {
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+}
+
+/* ── Media Placeholder Component ── */
+.media-placeholder {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border: 1px solid var(--c-border);
+  border-radius: 4px;
+  background-color: var(--c-surface-1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--sp-6);
+  text-align: center;
+  overflow: hidden;
+}
+
+.media-placeholder__pattern {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.03;
+  pointer-events: none;
+}
+
+.media-placeholder__icon {
+  width: 32px;
+  height: 32px;
+  margin-bottom: var(--sp-3);
+  opacity: 0.4;
+  color: var(--c-text-2);
+}
+
+.media-placeholder__title {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 10px;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--c-text-1);
+  margin-bottom: var(--sp-1);
+}
+
+.media-placeholder__desc {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--c-text-3);
+}
+
+/* ── Competitor Card Pattern ── */
+.competitor-card {
+  background-color: var(--c-surface-1);
+  border: 1px solid var(--c-border);
+  border-radius: 4px;
+  padding: var(--sp-5);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 400px;
+}
+
+.competitor-card__header {
+  margin-bottom: var(--sp-2);
+}
+
+.competitor-card__logo {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: var(--c-surface-2);
+  border: 1px solid var(--c-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: bold;
+  color: var(--c-text-1);
+  margin-bottom: var(--sp-3);
+}
+
+.competitor-card__name {
+  font-family: var(--font-sans);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--c-text-1);
+  margin-bottom: 2px;
+}
+
+.competitor-card__desc {
+  font-family: var(--font-sans);
+  font-size: var(--t-caption);
+  color: var(--c-text-3);
+  line-height: var(--lh-base);
+}
+
+.competitor-card__divider {
+  border: 0;
+  border-top: 1px solid var(--c-border);
+  margin: var(--sp-3) 0;
+}
+
+.competitor-card__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  font-size: var(--t-caption);
+  line-height: 1.4;
+}
+
+.competitor-card__detail-row {
+  display: flex;
+  flex-direction: column;
+}
+
+.competitor-card__detail-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  text-transform: uppercase;
+  color: var(--c-text-3);
+  letter-spacing: var(--ls-wide);
+  margin-bottom: 2px;
+}
+
+.competitor-card__detail-val {
+  color: var(--c-text-2);
+}
+
+.competitor-card__detail-val--highlight {
+  color: var(--c-text-1);
+  font-weight: 600;
+}
+
+.competitor-card__footer {
+  margin-top: auto;
+  padding-top: var(--sp-4);
+}
+
+.competitor-card__badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 8px;
+  font-weight: bold;
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+  color: var(--c-accent);
+  background-color: var(--c-accent-dim);
+  padding: 2px 6px;
+  border-radius: 2px;
+}
+
+
+
+
+
+/* ================================================================
+   Live Navigator, Reading Progress, & Interaction Styles
+   ================================================================ */
+
+/* ── 1. Reading Progress Bar ── */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background-color: var(--c-accent);
+  z-index: 9999;
+  transition: width 0.1s ease;
+}
+
+/* ── 2. Back to Top Button ── */
+.back-to-top {
+  position: fixed;
+  bottom: var(--sp-6);
+  right: var(--sp-6);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: var(--c-surface-2);
+  border: 1px solid var(--c-border);
+  color: var(--c-text-1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease, background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.back-to-top.back-to-top--visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.back-to-top:hover {
+  background-color: var(--c-surface-1);
+  color: var(--c-accent);
+  border-color: var(--c-accent);
+}
+
+/* ── 3. Smooth Scrolling & Offsets ── */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 80px; /* offset for sticky headers on mobile/desktop */
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ── 4. Keyboard Focus States ── */
+a:focus-visible, 
+button:focus-visible {
+  outline: 2px solid var(--c-accent) !important;
+  outline-offset: 4px !important;
+}
+
+/* ── 5. Left Navigator Collapsible Sections & Sub-navigation ── */
+.toc__section-group {
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+}
+
+.toc__section-group .toc__list {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease, margin-top 0.3s ease;
+  margin-top: 0;
+}
+
+/* Active sections expand their child list */
+.toc__section-group.toc__section-group--active .toc__list {
+  max-height: 800px;
+  opacity: 1;
+  overflow: visible;
+  margin-top: 4px;
+}
+
+/* Active Section indicator styling */
+.toc__section-group.toc__section-group--active .toc__section-label {
+  color: var(--c-accent);
+  font-weight: 700;
+  transition: color 0.3s ease;
+}
+
+/* Sub-list for Content Modules in sidebar */
+.toc__sublist {
+  list-style: none;
+  padding: 0;
+  margin: var(--sp-2) 0 var(--sp-2) var(--sp-3);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-left: 1px solid var(--c-border);
+  padding-left: var(--sp-3);
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+}
+
+/* When parent chapter item is active, show its sub-list of modules */
+.toc__item--active .toc__sublist {
+  max-height: 400px;
+  opacity: 1;
+  overflow: visible;
+}
+
+.toc__subitem a {
+  font-size: 11px !important;
+  color: var(--c-text-3) !important;
+  padding: 2px 4px !important;
+  text-decoration: none;
+  display: block;
+  transition: color var(--dur-s) var(--ease), padding-left var(--dur-s) var(--ease) !important;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  border-left: none !important;
+  border-radius: var(--r-sm) !important;
+}
+
+.toc__subitem a:hover {
+  color: var(--c-text-1) !important;
+  background-color: var(--c-surface-2) !important;
+}
+
+.toc__subitem--active a {
+  color: var(--c-accent) !important;
+  font-weight: 600 !important;
+  background-color: transparent !important;
+  padding-left: 8px !important;
+}
+
+/* ── 6. Chapter Progress Bar in Sidebar ── */
+.toc__chapter-progress {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--c-accent);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--sp-2);
+  padding: 2px var(--sp-3);
+  background-color: var(--c-accent-dim);
+  border-radius: 2px;
+  opacity: 0.85;
+  animation: fadeIn 0.3s ease;
+}
+
+.toc__progress-bar {
+  letter-spacing: 1px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 0.85; }
+}
+
+/* ── 7. Enhanced Document Navigator Styles ── */
+.toc__section-link {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  margin-top: 6px;
+  margin-bottom: 2px;
+  padding: 3px var(--sp-3);
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+  border-left: 2px solid transparent;
+}
+
+.toc__section-link:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 4px;
+}
+
+.toc__section-label {
+  font-family: var(--font-mono);
+  font-size: 8.5px;
+  font-weight: 700;
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--c-text-3) !important;
+  margin: 0 !important;
+}
+
+.toc__section-title {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--c-text-2);
+  line-height: var(--lh-tight);
+  margin-top: 2px;
+  transition: color 0.3s ease;
+}
+
+.toc__section-meta {
+  font-family: var(--font-sans);
+  font-size: 0.675rem;
+  color: var(--c-text-3);
+  margin-top: 3px;
+}
+
+/* Hover and active states for sections */
+.toc__section-link:hover .toc__section-title {
+  color: var(--c-text-1);
+}
+
+.toc__section-group.toc__section-group--active .toc__section-title {
+  color: var(--c-accent);
+}
+
+.toc__section-group.toc__section-group--active .toc__section-link {
+  border-left: 2px solid var(--c-accent);
+}
+
+/* Denser chapter items */
+.toc__item {
+  margin-bottom: 2px;
+}
+
+.toc__item a {
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 3px var(--sp-3) !important;
+  border-left: 2px solid transparent !important;
+  transition: all 0.3s ease !important;
+  text-decoration: none;
+  color: var(--c-text-2) !important;
+}
+
+.toc__item--active a {
+  border-left: 2px solid var(--c-accent) !important;
+  padding-left: var(--sp-3) !important;
+  background-color: var(--c-accent-dim) !important;
+  color: var(--c-text-1) !important;
+}
+
+.toc__chapter-title {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: var(--lh-tight);
+}
+
+.toc__item--active .toc__chapter-title {
+  font-weight: 600;
+}
+
+.toc__item .toc__chapter-num {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  color: var(--c-text-3);
+  margin-top: 2px;
+  margin-right: 0;
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wide);
+}
+
+.toc__item--active .toc__chapter-num {
+  color: var(--c-accent) !important;
+}
+
+/* Tighter modules layout */
+.toc__sublist {
+  margin: 2px 0 2px var(--sp-2.5) !important;
+  padding-left: var(--sp-2) !important;
+}
+
+.toc__subitem a {
+  font-size: 10.5px !important;
+  padding: 1px 4px !important;
+}
+
+/* Sidebar progress component */
+.toc__global-progress {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: 0 var(--sp-4) var(--sp-2) var(--sp-4);
+  border-bottom: 1px solid var(--c-border);
+  margin-bottom: var(--sp-2);
+}
+
+.toc__global-progress-header {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: 0;
+}
+
+.toc__global-progress-label {
+  font-family: var(--font-sans);
+  font-size: 0.55rem;
+  font-weight: 600;
+  color: var(--c-text-3);
+  text-transform: uppercase;
+  letter-spacing: var(--ls-wider);
+  white-space: nowrap;
+}
+
+.toc__global-progress-pct {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: var(--c-accent);
+}
+
+.toc__global-progress-bar-wrapper {
+  flex: 1;
+  height: 2px;
+  background-color: var(--c-surface-2);
+  border-radius: 1px;
+  overflow: hidden;
+  margin: 0;
+}
+
+.toc__global-progress-bar {
+  width: 0%;
+  height: 100%;
+  background-color: var(--c-accent);
+  transition: width 0.2s ease;
+}
+
+
+/* ================================================================
+   8. FIGURE SYSTEM STANDARDIZATION & NORMALIZATION
+   ================================================================ */
+
+/* --- Standardized Framework Layouts & Cards --- */
+.framework-step,
+.value-journey > div[style*="max-width"],
+.process-flow-container > div,
+.validation-chain > div[style*="max-width"],
+.cross-framework div[style*="text-align: center"],
+.market-framework > div[style*="relative"],
+.vertical-framework > div:not(svg) {
+  background-color: var(--c-surface-2) !important;
+  border: var(--bw) solid var(--c-border) !important;
+  border-radius: var(--r-md) !important;
+  transition: border-color var(--dur-s) var(--ease), background-color var(--dur-s) var(--ease), transform var(--dur-s) var(--ease) !important;
+}
+
+.framework-step:hover,
+.value-journey > div[style*="max-width"]:hover,
+.process-flow-container > div:hover,
+.validation-chain > div[style*="max-width"]:hover,
+.cross-framework div[style*="text-align: center"]:hover,
+.market-framework > div[style*="relative"]:hover,
+.vertical-framework > div:not(svg):hover {
+  border-color: var(--c-accent) !important;
+  background-color: var(--c-accent-glow) !important;
+  transform: translateY(-2px);
+}
+
+/* --- Figure Typography Normalization --- */
+
+/* 1. Diagram / Chart Titles (22–24px) */
+.chart-block__title,
+.media-caption__title,
+.fig-title {
+  font-family: var(--font-body) !important;
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  color: var(--c-text-1) !important;
+  line-height: var(--lh-tight) !important;
+}
+
+/* 2. Node Headings (15–16px) - Class-based opt-in only */
+.fig-node-heading {
+  font-family: var(--font-body) !important;
+  font-size: 15px !important;
+  font-weight: 600 !important;
+  color: var(--c-text-1) !important;
+  line-height: var(--lh-tight) !important;
+}
+
+/* 3. Body Labels (13–14px) - Class-based opt-in only */
+.fig-body-label,
+.chart-block__desc,
+.media-caption__text,
+.media-placeholder__desc {
+  font-family: var(--font-sans) !important;
+  font-size: 13px !important;
+  font-weight: 400 !important;
+  color: var(--c-text-2) !important;
+  line-height: var(--lh-base) !important;
+}
+
+/* Desktop sizing (prevents infinite scaling) */
+@media (min-width: 1024px) {
+  .chart-block__title,
+  .media-caption__title,
+  .fig-title {
+    font-size: 22px !important;
+  }
+  
+  .fig-node-heading {
+    font-size: 16px !important;
+  }
+  
+  .fig-body-label,
+  .chart-block__desc,
+  .media-caption__text,
+  .media-placeholder__desc {
+    font-size: 14px !important;
+  }
+}
+
+/* --- SVG Chart Typography Legibility --- */
+
+/* Base SVG Text styling - inherits size from SVG attributes/styles to preserve scaling */
+.editorial-chart text {
+  font-family: var(--font-sans) !important;
+  fill: var(--c-text-2) !important;
+}
+
+/* Force correct font-family mapping for monospace styles */
+.editorial-chart text[font-family*="mono"],
+.editorial-chart text[style*="font-family: var(--font-mono)"],
+.editorial-chart text[style*="font-mono"] {
+  font-family: var(--font-mono) !important;
+}
+
+/* Color highlights and labels */
+.editorial-chart text.t-label,
+.editorial-chart text.t--label {
+  font-family: var(--font-sans) !important;
+  fill: var(--c-text-3) !important;
+}
+
+.editorial-chart text.t-highlight,
+.editorial-chart text.t--highlight {
+  font-family: var(--font-sans) !important;
+  fill: var(--c-accent) !important;
+}
+
+/* --- Standard Editorial Image Block --- */
+.editorial-image-block {
+  margin-top: var(--sp-7) !important; /* 48px above the image */
+  margin-bottom: var(--sp-7) !important; /* 48px before the following chart */
+  width: 100%;
+}
+
+.editorial-image-block.figure-standard {
+  max-width: 920px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+.editorial-image {
+  width: 100%;
+  height: auto;
+  border-radius: 8px; /* Corner radius 8px */
+  border: none !important;
+  box-shadow: none !important;
+  display: block;
+}
+
+/* Standardize visual style of all media captions to match Figure 1.0 */
+.media-caption {
+  font-family: var(--font-sans) !important;
+  font-size: var(--t-caption) !important;
+  line-height: var(--lh-base) !important;
+  color: var(--c-text-3) !important; /* Matches Figure 1.0 caption color */
+}
+
+.editorial-image-block .media-caption {
+  margin-top: var(--sp-5) !important; /* 24px between image and caption */
+}
+
+/* --- Aspect Ratio and Ruled Grid Background --- */
+
+/* Fix SVG aspect ratio distortion and ellipsoid circles */
+.editorial-chart {
+  width: 100% !important;
+  height: auto !important;
+}
+
+/* Ensure the canvas expands naturally to fit the SVG without vertical squishing/clipping */
+.chart-block__canvas {
+  height: auto !important;
+  min-height: 360px !important;
+}
+
+/* Ruled-paper grid background on ALL figure canvases for consistency */
+.chart-block__canvas:has(.editorial-chart)::before {
+  display: block !important;
+}
+
+/* --- Cover Hero Layout (Redesigned Vertical Flow) --- */
+.cover-hero {
+  min-height: auto !important;
+  display: block !important;
+  max-width: 900px !important; /* Aligns with standard editorial content width */
+  margin: 0 auto !important;
+  padding-top: var(--sp-10) !important;
+  padding-bottom: var(--sp-10) !important;
+}
+
+.cover-hero__title {
+  margin-bottom: var(--sp-3) !important;
+}
+
+.cover-hero__subtitle {
+  margin-bottom: var(--sp-6) !important;
+}
+
+.cover-hero__intro {
+  margin-bottom: var(--sp-8);
+  max-width: 720px; /* Standard editorial text width for readability */
+}
+
+.cover-hero__image-wrapper {
+  margin-bottom: var(--sp-8);
+  width: 100%;
+}
+
+.cover-hero__image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  object-position: center; /* Center-focused for the new composition */
+  border-radius: 8px; /* Reduced corner radius (8-12px) */
+  box-shadow: none !important; /* No borders or decorative effects */
+  border: none !important;
+  animation: fadeInHero 1.2s ease-out forwards; /* Fade-in when it first enters */
+  opacity: 0;
+}
+
+.cover-hero__image-caption {
+  font-family: var(--font-sans);
+  font-size: var(--t-caption);
+  line-height: var(--lh-base);
+  color: var(--c-text-3);
+  margin-top: var(--sp-3);
+  display: block;
+}
+
+.cover-hero__meta-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--c-border);
+  padding-top: var(--sp-6);
+  margin-top: var(--sp-8);
+  max-width: 720px;
+}
+
+.cover-hero__byline {
+  margin: 0 !important;
+}
+
+.cover-hero__footer {
+  position: static !important;
+  margin: 0 !important;
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  color: var(--c-text-3);
+}
+
+/* Remove hover interactions from editorial images */
+.cover-hero__image:hover,
+.editorial-image:hover,
+.chart-block__canvas img:hover {
+  transform: none !important;
+  box-shadow: none !important;
+  border-color: initial !important;
+  cursor: default !important;
+}
+
+@keyframes fadeInHero {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ================================================================
+   Mobile Responsive Pass Overrides (Production Pass 04)
+   ================================================================ */
+
+@media (max-width: 1024px) {
+  /* Sticky mobile navigation header styling */
+  .mobile-header {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    padding: 0 var(--sp-5);
+    background-color: var(--c-surface);
+    border-bottom: var(--bw) solid var(--c-border);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+  }
+
+  .mobile-header__title {
+    font-family: var(--font-display);
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: var(--ls-tight);
+    color: var(--c-text-1);
+    text-transform: uppercase;
+  }
+
+  .mobile-header__progress-container {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--c-text-3);
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+    background-color: var(--c-surface-2);
+    padding: 4px 8px;
+    border-radius: 12px;
+    border: var(--bw) solid var(--c-border);
+  }
+
+  .mobile-header__progress-label {
+    opacity: 0.8;
+  }
+
+  .mobile-header__progress-pct {
+    color: var(--c-accent);
+    font-weight: 700;
+  }
+
+  .mobile-header__toggle {
+    background: none;
+    border: none;
+    color: var(--c-accent);
+    font-family: var(--font-mono);
+    font-size: 10px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: var(--ls-wide);
+    padding: 6px 12px;
+    border: var(--bw) solid var(--c-accent);
+    border-radius: var(--r-sm);
+    transition: all var(--dur-s) var(--ease);
+  }
+
+  /* Overlay Dimming Effect when Sidebar Menu is open */
+  body.menu-open .page__main {
+    opacity: 0.3;
+    pointer-events: none;
+  }
+
+  /* Layout and Paddings */
+  .page__main {
+    padding-top: 90px !important; /* Extra spacing below sticky header */
+    padding-left: 24px !important;
+    padding-right: 24px !important;
+  }
+
+  /* Single-column grid overrides for card sections and competitor cards */
+  .grid-2,
+  .grid-3,
+  .comparison-pair,
+  .pros-cons {
+    grid-template-columns: 1fr !important;
+    gap: var(--sp-6) !important;
+  }
+
+  /* Content block spacing for better vertical rhythm */
+  .content-block {
+    padding-top: var(--sp-7) !important;
+    padding-bottom: var(--sp-5) !important;
+  }
+
+  .chart-block,
+  .editorial-image-block {
+    margin-bottom: var(--sp-7) !important;
+    margin-top: var(--sp-5) !important;
+  }
+
+  .chapter-header {
+    padding-top: var(--sp-7) !important;
+    margin-bottom: var(--sp-5) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Prevent complex SVGs from shrinking to unreadable sizes, scroll horizontally instead */
+  .chart-block__canvas svg:not(.media-placeholder__icon):not(.media-placeholder__pattern),
+  .editorial-chart {
+    min-width: 600px !important;
+    width: 600px !important;
+    height: auto !important;
+  }
+
+  .chart-block__canvas {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: var(--sp-4) !important;
+  }
+
+  /* Thin subtle scrollbar for scrollable canvases */
+  .chart-block__canvas::-webkit-scrollbar {
+    height: 4px;
+  }
+  .chart-block__canvas::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .chart-block__canvas::-webkit-scrollbar-thumb {
+    background-color: var(--c-border);
+    border-radius: 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Mobile padding layout adaptation */
+  .page__main {
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  /* Adapt vertical flow framework structures on small screens */
+  .value-journey > div,
+  .validation-chain > div,
+  .cross-framework > div {
+    max-width: 100% !important;
+  }
+}
+
+/* Touch device hover resetting wrapper */
+@media (hover: none) {
+  /* Prevent sticky hover backgrounds and translations on touch devices */
+  .framework-step:hover,
+  .value-journey > div[style*="max-width"]:hover,
+  .process-flow-container > div:hover,
+  .validation-chain > div[style*="max-width"]:hover,
+  .cross-framework div[style*="text-align: center"]:hover,
+  .market-framework > div[style*="relative"]:hover,
+  .vertical-framework > div:not(svg):hover {
+    border-color: var(--c-border) !important;
+    background-color: var(--c-surface-2) !important;
+    transform: none !important;
+  }
+}
+
+/* Generic table wrapper container to guarantee scrollability on mobile */
+.table-wrapper {
+  width: 100% !important;
+  overflow-x: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+  margin-bottom: var(--sp-6);
+}
+.table-wrapper::-webkit-scrollbar {
+  height: 4px;
+}
+.table-wrapper::-webkit-scrollbar-thumb {
+  background-color: var(--c-border);
+  border-radius: 2px;
+}
+table {
+  min-width: 600px;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Custom override to display a checkmark symbol instead of arrow for takeaway cards */
+.takeaway-card__list li::before {
+  content: '✓' !important;
+}
+
+/* ================================================================
+   SUBSCRIBER vs REVENUE MATRIX  (SRM)
+   Premium 40×40 waffle chart — Figure 4.3
+   ⬜ white filled = Annual Revenue
+   ⬛ dark outlined = Subscribers
+   All values normalised against highest per metric.
+   ================================================================ */
+
+/* ── Legend ─────────────────────────────────────────────────────── */
+.srm-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-5);
+  margin-bottom: var(--sp-5);
+}
+
+.srm-legend__item {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.srm-legend__swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 1px;
+  flex-shrink: 0;
+}
+
+.srm-legend__swatch--filled {
+  background-color: var(--c-text-1);
+}
+
+.srm-legend__swatch--outlined {
+  background-color: transparent;
+  border: 1px solid rgba(250, 250, 250, 0.45);
+}
+
+.srm-legend__text {
+  font-family: var(--font-mono);
+  font-size: var(--t-caption);
+  color: var(--c-text-3);
+  letter-spacing: var(--ls-wide);
+  text-transform: uppercase;
+}
+
+/* ── Cards grid ─────────────────────────────────────────────────── */
+.srm-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-4);
+  width: 100%;
+}
+
+@media (max-width: 820px) {
+  .srm-cards {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--sp-4);
+  }
+}
+
+@media (max-width: 480px) {
+  .srm-cards {
+    grid-template-columns: 1fr;
+    gap: var(--sp-4);
+  }
+}
+
+/* ── Individual card ─────────────────────────────────────────────── */
+.srm-card {
+  background-color: var(--c-surface-2);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  opacity: 1;
+}
+
+/* NeuroCrack target accent - static thin neon green border, no shadows */
+.srm-card--target {
+  border: 1px solid var(--c-accent);
+}
+
+/* ── Company name row ───────────────────────────────────────────── */
+.srm-card__name {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--c-text-1);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.2;
+}
+
+.srm-card__name--target {
+  color: var(--c-accent);
+}
+
+.srm-card__badge {
+  font-family: var(--font-mono);
+  font-size: 7px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #111113; /* dark text for contrast */
+  background-color: var(--c-accent); /* filled neon-green pill */
+  border: none;
+  padding: 2px 6px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+/* ── 40×40 Matrix ───────────────────────────────────────────────── */
+.srm-matrix {
+  display: grid;
+  grid-template-columns: repeat(40, 1fr);
+  grid-auto-rows: 1fr;   /* rows equal column width → square cells */
+  gap: 1px;
+  width: 100%;
+  aspect-ratio: 1 / 1;  /* container is a perfect square */
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+/* Individual cell base */
+.srm-cell {
+  border-radius: 1px;
+  aspect-ratio: 1 / 1;
+}
+
+/* Revenue cell — white fill (static) */
+.srm-cell--rev {
+  background-color: var(--c-text-1);
+  opacity: 1;
+}
+
+/* Target company — accent color instead of white */
+.srm-card--target .srm-cell--rev {
+  background-color: var(--c-accent);
+}
+
+/* Subscriber-only cell — dark outlined */
+.srm-cell--sub {
+  background-color: transparent;
+  border: 1px solid rgba(250, 250, 250, 0.45); /* hollow outline with higher contrast */
+}
+
+/* Empty / inactive cell — barely visible */
+.srm-cell--empty {
+  background-color: transparent;
+  border: 1px solid rgba(250, 250, 250, 0.015); /* reduced opacity to minimize visual noise */
+}
+
+/* ── Metrics row ─────────────────────────────────────────────────── */
+.srm-meta {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding-top: var(--sp-2);
+  border-top: 1px solid var(--c-border);
+}
+
+.srm-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.srm-stat__label {
+  font-family: var(--font-mono);
+  font-size: 8px;
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--c-text-3);
+  line-height: 1;
+}
+
+.srm-stat__value {
+  font-family: var(--font-sans);
+  font-size: 1.35rem; /* increased size */
+  font-weight: 800;   /* increased visual weight */
+  letter-spacing: -0.03em;
+  color: var(--c-text-1);
+  line-height: 1.15;
+}
+
+.srm-stat__value--target {
+  color: var(--c-accent) !important;
+}
+
+.srm-card--target .srm-stat__value {
+  color: var(--c-accent);
+}
+
+
+/* ================================================================
+   COST SPLIT — Premium editorial stat comparison
+   Figure 1.2: Govt ₹2.5L vs Private ₹75L
+   ================================================================ */
+
+.cost-split {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: var(--sp-5);
+  padding: var(--sp-6) 0 var(--sp-5);
+}
+
+/* ── Individual stat card ──────────────────────────────────────── */
+.cost-split__card {
+  background-color: var(--c-surface-2);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: var(--sp-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.cost-split__card--accent {
+  border-color: var(--c-accent);
+  background-color: rgba(216, 255, 62, 0.03);
+}
+
+/* tag */
+.cost-split__tag {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--c-text-3);
+}
+
+.cost-split__tag--accent {
+  color: var(--c-accent);
+}
+
+/* big number */
+.cost-split__amount {
+  font-family: var(--font-sans);
+  font-size: clamp(2.8rem, 6vw, 4.5rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--c-text-2);
+  line-height: 1;
+}
+
+.cost-split__amount--accent {
+  color: var(--c-text-1);
+}
+
+.cost-split__unit {
+  font-size: 0.5em;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: inherit;
+  opacity: 0.7;
+}
+
+/* description */
+.cost-split__desc {
+  font-family: var(--font-sans);
+  font-size: var(--t-caption);
+  color: var(--c-text-3);
+  line-height: 1.55;
+  margin: 0;
+  max-width: 260px;
+}
+
+/* proportional bar */
+.cost-split__bar {
+  height: 3px;
+  background-color: var(--c-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.cost-split__bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.cost-split__bar-fill--muted {
+  background-color: var(--c-text-3);
+}
+
+.cost-split__bar-fill--accent {
+  background-color: var(--c-accent);
+}
+
+/* ── Divider / multiplier callout ──────────────────────────────── */
+.cost-split__divider {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.cost-split__multiplier {
+  font-family: var(--font-sans);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--c-accent);
+  line-height: 1;
+}
+
+.cost-split__multiplier-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--c-text-3);
+}
+
+/* ── Responsive ────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .cost-split {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+  }
+  .cost-split__divider {
+    flex-direction: row;
+    gap: var(--sp-3);
+    padding: var(--sp-2) 0;
+  }
+}
+
+
+/* ================================================================
+   PREPARATION POOL INFOGRAPHIC
+   Figure 1.3: Four-cohort cards + total banner
+   ================================================================ */
+
+.pool-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-3);
+  margin-bottom: var(--sp-4);
+  position: relative;
+}
+
+/* Connector line between cards */
+.pool-cards::before {
+  content: '';
+  position: absolute;
+  top: 44px; /* vertically centred in the icon circle */
+  left: calc(var(--sp-4) + 22px); /* start after first icon */
+  right: calc(var(--sp-4) + 22px);
+  height: 1px;
+  background: linear-gradient(to right,
+    var(--c-border) 0%,
+    var(--c-accent) 50%,
+    var(--c-border) 100%
+  );
+  z-index: 0;
+}
+
+/* Individual pool card */
+.pool-card {
+  background-color: var(--c-surface-2);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-md);
+  padding: var(--sp-4);
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  position: relative;
+  z-index: 1;
+  /* entrance animation */
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pool-card--1 { transition-delay: 0ms; }
+.pool-card--2 { transition-delay: 100ms; }
+.pool-card--3 { transition-delay: 200ms; }
+.pool-card--4 { transition-delay: 300ms; border-color: var(--c-accent); background-color: rgba(216,255,62,0.02); }
+
+/* Reveal state (added by JS) */
+.pool-card.pool-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Icon circle */
+.pool-card__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-color: var(--c-surface);
+  border: 1px solid var(--c-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--c-text-3);
+  letter-spacing: 0;
+  flex-shrink: 0;
+  margin-bottom: var(--sp-1);
+}
+
+.pool-card--4 .pool-card__icon {
+  border-color: var(--c-accent);
+  color: var(--c-accent);
+}
+
+/* Title */
+.pool-card__title {
+  font-family: var(--font-sans);
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--c-text-1);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.pool-card--4 .pool-card__title {
+  color: var(--c-accent);
+}
+
+/* Description */
+.pool-card__desc {
+  font-family: var(--font-sans);
+  font-size: var(--t-caption);
+  color: var(--c-text-3);
+  line-height: 1.5;
+  margin: 0;
+  flex-grow: 1;
+}
+
+/* Stat count */
+.pool-card__stat {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--c-text-2);
+  letter-spacing: var(--ls-wide);
+  margin-top: auto;
+  padding-top: var(--sp-2);
+  border-top: 1px solid var(--c-border);
+}
+
+.pool-card--4 .pool-card__stat {
+  color: var(--c-accent);
+  border-color: rgba(216, 255, 62, 0.2);
+}
+
+/* ── Total banner ──────────────────────────────────────────────── */
+.pool-total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: var(--sp-5) var(--sp-6);
+  background-color: var(--c-surface-2);
+  border: 1px solid var(--c-accent);
+  border-radius: var(--r-md);
+  text-align: center;
+  margin-bottom: var(--sp-5);
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.6s 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.pool-total.pool-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pool-total__label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: var(--ls-wider);
+  text-transform: uppercase;
+  color: var(--c-text-3);
+}
+
+.pool-total__number {
+  font-family: var(--font-sans);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--c-accent);
+  line-height: 1.1;
+}
+
+.pool-total__sublabel {
+  font-family: var(--font-sans);
+  font-size: var(--t-caption);
+  color: var(--c-text-3);
+}
+
+/* ── Responsive pool cards ─────────────────────────────────────── */
+@media (max-width: 820px) {
+  .pool-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pool-cards::before {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .pool-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+
+/* ================================================================
+   MBBS LINE CHART GLOW
+   Pulse animation on the terminal (2025) data point
+   ================================================================ */
+@keyframes glow-pulse {
+  0%, 100% { filter: drop-shadow(0 0 3px var(--c-accent)); }
+  50%       { filter: drop-shadow(0 0 8px var(--c-accent)) drop-shadow(0 0 14px var(--c-accent)); }
+}
+
+.chart-glow-point {
+  animation: glow-pulse 2.2s ease-in-out infinite;
+}
+
+
+/* ================================================================
+   CHART SCROLL-REVEAL  (IntersectionObserver toggled)
+   Adds a soft fade-up entrance to every .chart-block
+   ================================================================ */
+.chart-block {
+  opacity: 0;
+  transform: translateY(16px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chart-block.chart-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ================================================================
+   13. BRANDING UPDATE — NOTHING-INSPIRED DOT MATRIX TYPOGRAPHY
+   ================================================================ */
+.cover-hero__brand {
+  display: block;
+  font-family: 'Ndot57', sans-serif !important;
+  font-size: clamp(2.75rem, 6.5vw, 5.25rem) !important;
+  font-weight: normal !important;
+  letter-spacing: 0.08em !important;
+  line-height: 1.0 !important;
+  text-transform: uppercase !important;
+  color: var(--c-text-1) !important;
+}
+
+.cover-hero__brand-sub {
+  display: block;
+  font-family: 'Ndot57', sans-serif !important;
+  font-size: clamp(1.25rem, 2.8vw, 2.15rem) !important;
+  font-weight: normal !important;
+  letter-spacing: 0.05em !important;
+  line-height: var(--lh-snug) !important;
+  text-transform: none !important;
+  color: var(--c-accent) !important;
+  margin-top: var(--sp-3) !important;
+}
+
+/* ================================================================
+   14. REUSABLE PREMIUM VIDEO COMPONENT OVERRIDES
+   ================================================================ */
+.media-video {
+  max-width: var(--col-w);
+  margin: var(--sp-7) auto !important;
+  border-radius: 12px !important;
+  border: 1px solid var(--c-border) !important;
+  background-color: var(--c-surface-2) !important; /* Dark card surface */
+  overflow: hidden;
+  padding: var(--sp-4) !important;
+  transition: border-color var(--dur-s) var(--ease) !important;
+}
+
+.media-video:hover,
+.media-video.media-video--active {
+  border-color: var(--c-accent) !important; /* Premium interactive accent highlight */
+}
+
+.media-video__wrapper {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9 !important; /* Ensures no layout shifts */
+  border-radius: 8px !important;
+  overflow: hidden;
+  background-color: var(--c-bg) !important;
+  cursor: pointer;
+}
+
+.media-video__wrapper:focus-visible {
+  outline: 2px solid var(--c-accent) !important;
+  outline-offset: 2px !important;
+}
+
+.media-video__preview {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transition: opacity var(--dur-m) var(--ease) !important;
+  z-index: 2;
+}
+
+.media-video__preview--hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.media-video__thumb {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.media-video__overlay {
+  position: absolute;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  transition: background-color var(--dur-s) var(--ease) !important;
+}
+
+.media-video__wrapper:hover .media-video__overlay {
+  background-color: rgba(0, 0, 0, 0.25) !important;
+}
+
+.media-video__play-btn {
+  position: absolute;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: 64px !important;
+  height: 64px !important;
+  border-radius: 50% !important;
+  background-color: rgba(9, 9, 11, 0.9) !important; /* Dark matching --c-bg */
+  border: 2px solid var(--c-accent) !important;
+  color: var(--c-accent) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  cursor: pointer !important;
+  transition: all var(--dur-s) var(--ease) !important;
+  padding-left: 4px !important; /* Visual centering adjustment for triangle */
+  pointer-events: none !important;
+  z-index: 3;
+}
+
+.media-video__play-btn svg {
+  width: 24px !important;
+  height: 24px !important;
+}
+
+.media-video__wrapper:hover .media-video__play-btn {
+  background-color: var(--c-accent) !important;
+  color: var(--c-bg) !important;
+  transform: translate(-50%, -50%) scale(1.08) !important;
+}
+
+.media-video__player {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.media-video__player iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.media-video__info {
+  margin-top: var(--sp-4) !important;
+  padding: 0 var(--sp-1) !important;
+}
+
+.media-video__title {
+  font-family: var(--font-display) !important;
+  font-size: var(--t-h3) !important;
+  font-weight: 600 !important;
+  color: var(--c-text-1) !important;
+  margin-bottom: var(--sp-1.5) !important;
+}
+
+.media-video__desc {
+  font-family: var(--font-body) !important;
+  font-size: var(--t-caption) !important;
+  color: var(--c-text-2) !important;
+  line-height: var(--lh-base) !important;
+}
+
+.media-video__caption {
+  font-family: var(--font-mono) !important;
+  font-size: var(--t-caption) !important;
+  color: var(--c-text-3) !important;
+  margin-top: var(--sp-3) !important;
+  padding: 0 var(--sp-1) !important;
+  display: block;
+}
+
+
