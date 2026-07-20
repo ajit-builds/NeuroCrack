@@ -220,8 +220,8 @@
 }
 
 /* Extra space between content-block body and any following figure */
-.content-block__body + figure,
-.content-block__body + .chart-block {
+.content-block__body+figure,
+.content-block__body+.chart-block {
   margin-top: var(--sp-6);
 }
 
@@ -486,7 +486,8 @@
 /* ── 3. Smooth Scrolling & Offsets ── */
 html {
   scroll-behavior: smooth;
-  scroll-padding-top: 80px; /* offset for sticky headers on mobile/desktop */
+  scroll-padding-top: 80px;
+  /* offset for sticky headers on mobile/desktop */
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -496,7 +497,7 @@ html {
 }
 
 /* ── 4. Keyboard Focus States ── */
-a:focus-visible, 
+a:focus-visible,
 button:focus-visible {
   outline: 2px solid var(--c-accent) !important;
   outline-offset: 4px !important;
@@ -602,8 +603,13 @@ button:focus-visible {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 0.85; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 0.85;
+  }
 }
 
 /* ── 7. Enhanced Document Navigator Styles ── */
@@ -782,12 +788,12 @@ button:focus-visible {
 
 /* --- Standardized Framework Layouts & Cards --- */
 .framework-step,
-.value-journey > div[style*="max-width"],
-.process-flow-container > div,
-.validation-chain > div[style*="max-width"],
+.value-journey>div[style*="max-width"],
+.process-flow-container>div,
+.validation-chain>div[style*="max-width"],
 .cross-framework div[style*="text-align: center"],
-.market-framework > div[style*="relative"],
-.vertical-framework > div:not(svg) {
+.market-framework>div[style*="relative"],
+.vertical-framework>div:not(svg) {
   background-color: var(--c-surface-2) !important;
   border: var(--bw) solid var(--c-border) !important;
   border-radius: var(--r-md) !important;
@@ -795,12 +801,12 @@ button:focus-visible {
 }
 
 .framework-step:hover,
-.value-journey > div[style*="max-width"]:hover,
-.process-flow-container > div:hover,
-.validation-chain > div[style*="max-width"]:hover,
+.value-journey>div[style*="max-width"]:hover,
+.process-flow-container>div:hover,
+.validation-chain>div[style*="max-width"]:hover,
 .cross-framework div[style*="text-align: center"]:hover,
-.market-framework > div[style*="relative"]:hover,
-.vertical-framework > div:not(svg):hover {
+.market-framework>div[style*="relative"]:hover,
+.vertical-framework>div:not(svg):hover {
   border-color: var(--c-accent) !important;
   background-color: var(--c-accent-glow) !important;
   transform: translateY(-2px);
@@ -842,16 +848,17 @@ button:focus-visible {
 
 /* Desktop sizing (prevents infinite scaling) */
 @media (min-width: 1024px) {
+
   .chart-block__title,
   .media-caption__title,
   .fig-title {
     font-size: 22px !important;
   }
-  
+
   .fig-node-heading {
     font-size: 16px !important;
   }
-  
+
   .fig-body-label,
   .chart-block__desc,
   .media-caption__text,
@@ -890,8 +897,10 @@ button:focus-visible {
 
 /* --- Standard Editorial Image Block --- */
 .editorial-image-block {
-  margin-top: var(--sp-7) !important; /* 48px above the image */
-  margin-bottom: var(--sp-7) !important; /* 48px before the following chart */
+  margin-top: var(--sp-7) !important;
+  /* 48px above the image */
+  margin-bottom: var(--sp-7) !important;
+  /* 48px before the following chart */
   width: 100%;
 }
 
@@ -904,7 +913,8 @@ button:focus-visible {
 .editorial-image {
   width: 100%;
   height: auto;
-  border-radius: 8px; /* Corner radius 8px */
+  border-radius: 8px;
+  /* Corner radius 8px */
   border: none !important;
   box-shadow: none !important;
   display: block;
@@ -915,11 +925,13 @@ button:focus-visible {
   font-family: var(--font-sans) !important;
   font-size: var(--t-caption) !important;
   line-height: var(--lh-base) !important;
-  color: var(--c-text-3) !important; /* Matches Figure 1.0 caption color */
+  color: var(--c-text-3) !important;
+  /* Matches Figure 1.0 caption color */
 }
 
 .editorial-image-block .media-caption {
-  margin-top: var(--sp-5) !important; /* 24px between image and caption */
+  margin-top: var(--sp-5) !important;
+  /* 24px between image and caption */
 }
 
 /* --- Aspect Ratio and Ruled Grid Background --- */
@@ -945,7 +957,8 @@ button:focus-visible {
 .cover-hero {
   min-height: auto !important;
   display: block !important;
-  max-width: 900px !important; /* Aligns with standard editorial content width */
+  max-width: 900px !important;
+  /* Aligns with standard editorial content width */
   margin: 0 auto !important;
   padding-top: var(--sp-10) !important;
   padding-bottom: var(--sp-10) !important;
@@ -961,7 +974,8 @@ button:focus-visible {
 
 .cover-hero__intro {
   margin-bottom: var(--sp-8);
-  max-width: 720px; /* Standard editorial text width for readability */
+  max-width: 720px;
+  /* Standard editorial text width for readability */
 }
 
 .cover-hero__image-wrapper {
@@ -974,11 +988,15 @@ button:focus-visible {
   height: auto;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  object-position: center; /* Center-focused for the new composition */
-  border-radius: 8px; /* Reduced corner radius (8-12px) */
-  box-shadow: none !important; /* No borders or decorative effects */
+  object-position: center;
+  /* Center-focused for the new composition */
+  border-radius: 8px;
+  /* Reduced corner radius (8-12px) */
+  box-shadow: none !important;
+  /* No borders or decorative effects */
   border: none !important;
-  animation: fadeInHero 1.2s ease-out forwards; /* Fade-in when it first enters */
+  animation: fadeInHero 1.2s ease-out forwards;
+  /* Fade-in when it first enters */
   opacity: 0;
 }
 
@@ -1027,6 +1045,7 @@ button:focus-visible {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -1037,6 +1056,7 @@ button:focus-visible {
    ================================================================ */
 
 @media (max-width: 1024px) {
+
   /* Sticky mobile navigation header styling */
   .mobile-header {
     display: flex !important;
@@ -1109,7 +1129,8 @@ button:focus-visible {
 
   /* Layout and Paddings */
   .page__main {
-    padding-top: 90px !important; /* Extra spacing below sticky header */
+    padding-top: 90px !important;
+    /* Extra spacing below sticky header */
     padding-left: 24px !important;
     padding-right: 24px !important;
   }
@@ -1142,6 +1163,7 @@ button:focus-visible {
 }
 
 @media (max-width: 768px) {
+
   /* Prevent complex SVGs from shrinking to unreadable sizes, scroll horizontally instead */
   .chart-block__canvas svg:not(.media-placeholder__icon):not(.media-placeholder__pattern),
   .editorial-chart {
@@ -1160,9 +1182,11 @@ button:focus-visible {
   .chart-block__canvas::-webkit-scrollbar {
     height: 4px;
   }
+
   .chart-block__canvas::-webkit-scrollbar-track {
     background: transparent;
   }
+
   .chart-block__canvas::-webkit-scrollbar-thumb {
     background-color: var(--c-border);
     border-radius: 2px;
@@ -1170,6 +1194,7 @@ button:focus-visible {
 }
 
 @media (max-width: 480px) {
+
   /* Mobile padding layout adaptation */
   .page__main {
     padding-left: 20px !important;
@@ -1177,23 +1202,24 @@ button:focus-visible {
   }
 
   /* Adapt vertical flow framework structures on small screens */
-  .value-journey > div,
-  .validation-chain > div,
-  .cross-framework > div {
+  .value-journey>div,
+  .validation-chain>div,
+  .cross-framework>div {
     max-width: 100% !important;
   }
 }
 
 /* Touch device hover resetting wrapper */
 @media (hover: none) {
+
   /* Prevent sticky hover backgrounds and translations on touch devices */
   .framework-step:hover,
-  .value-journey > div[style*="max-width"]:hover,
-  .process-flow-container > div:hover,
-  .validation-chain > div[style*="max-width"]:hover,
+  .value-journey>div[style*="max-width"]:hover,
+  .process-flow-container>div:hover,
+  .validation-chain>div[style*="max-width"]:hover,
   .cross-framework div[style*="text-align: center"]:hover,
-  .market-framework > div[style*="relative"]:hover,
-  .vertical-framework > div:not(svg):hover {
+  .market-framework>div[style*="relative"]:hover,
+  .vertical-framework>div:not(svg):hover {
     border-color: var(--c-border) !important;
     background-color: var(--c-surface-2) !important;
     transform: none !important;
@@ -1207,13 +1233,16 @@ button:focus-visible {
   -webkit-overflow-scrolling: touch !important;
   margin-bottom: var(--sp-6);
 }
+
 .table-wrapper::-webkit-scrollbar {
   height: 4px;
 }
+
 .table-wrapper::-webkit-scrollbar-thumb {
   background-color: var(--c-border);
   border-radius: 2px;
 }
+
 table {
   min-width: 600px;
   width: 100%;
@@ -1302,12 +1331,230 @@ table {
   display: flex;
   flex-direction: column;
   gap: var(--sp-3);
-  opacity: 1;
+  opacity: 0;
+  transform: translateY(6px);
 }
 
 /* NeuroCrack target accent - static thin neon green border, no shadows */
 .srm-card--target {
   border: 1px solid var(--c-accent);
+}
+
+.chart-revealed .srm-card {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Card Reveal Animations (Phase 1 & 8) */
+.chart-revealed .srm-card:nth-child(1) {
+  animation: srm-card-reveal 500ms ease-out 0ms 1 normal both;
+}
+
+.chart-revealed .srm-card:nth-child(2) {
+  animation: srm-card-reveal 500ms ease-out 2850ms 1 normal both;
+}
+
+.chart-revealed .srm-card:nth-child(3) {
+  animation: srm-card-reveal 500ms ease-out 5700ms 1 normal both;
+}
+
+.chart-revealed .srm-card:nth-child(4) {
+  animation: srm-card-reveal 500ms ease-out 8550ms 1 normal both;
+}
+
+/* Waffle Matrix Layout */
+.srm-matrix-container {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+.srm-matrix--bg {
+  width: 100%;
+  height: 100%;
+}
+
+.srm-matrix--fg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.srm-matrix--fg .srm-cell--empty {
+  border-color: transparent !important;
+}
+
+/* Staggered Active Cell Animations */
+.chart-revealed .srm-cell--rev,
+.chart-revealed .srm-cell--sub {
+  animation: srm-cell-reveal 150ms ease-out both;
+}
+
+/* Base style for stat entries */
+.srm-stat {
+  opacity: 0;
+  transform: translateY(4px);
+}
+
+/* Subscriber Value Reveal (Phase 5) Delays */
+.chart-revealed .srm-card:nth-child(1) .srm-stat:nth-child(1) {
+  animation: srm-stat-reveal 250ms ease-out 2000ms 1 normal both;
+}
+
+.chart-revealed .srm-card:nth-child(2) .srm-stat:nth-child(1) {
+  animation: srm-stat-reveal 250ms ease-out 4850ms 1 normal both;
+}
+
+.chart-revealed .srm-card:nth-child(3) .srm-stat:nth-child(1) {
+  animation: srm-stat-reveal 250ms ease-out 7700ms 1 normal both;
+}
+
+.chart-revealed .srm-card:nth-child(4) .srm-stat:nth-child(1) {
+  animation: srm-stat-reveal 250ms ease-out 10550ms 1 normal both;
+}
+
+/* Revenue Value Reveal (Phase 6) Delays */
+.chart-revealed .srm-card:nth-child(1) .srm-stat:nth-child(2) {
+  animation: srm-stat-reveal 250ms ease-out 2350ms 1 normal both;
+}
+
+.chart-revealed .srm-card:nth-child(2) .srm-stat:nth-child(2) {
+  animation: srm-stat-reveal 250ms ease-out 5200ms 1 normal both;
+}
+
+.chart-revealed .srm-card:nth-child(3) .srm-stat:nth-child(2) {
+  animation: srm-stat-reveal 250ms ease-out 8050ms 1 normal both;
+}
+
+.chart-revealed .srm-card:nth-child(4) .srm-stat:nth-child(2) {
+  animation: srm-stat-reveal 250ms ease-out 10900ms 1 normal both;
+}
+
+/* Keyframes */
+@keyframes srm-card-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes srm-cell-reveal {
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes srm-stat-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* NeuroCrack target highlight sweep (Phase 9) */
+.srm-card--target .srm-card__badge {
+  position: relative;
+  overflow: hidden;
+}
+
+.chart-revealed .srm-card--target .srm-card__badge::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg,
+      rgba(255, 255, 255, 0) 0%,
+      rgba(255, 255, 255, 0.7) 50%,
+      rgba(255, 255, 255, 0) 100%);
+  transform: skewX(-20deg);
+  animation: highlight-sweep-bg 1s ease-in-out 11.15s 1 normal forwards;
+}
+
+.chart-revealed .srm-card--target .srm-card__name--target,
+.chart-revealed .srm-card--target .srm-stat__value--target {
+  background: linear-gradient(90deg,
+      var(--c-accent) 0%,
+      var(--c-accent) 35%,
+      #ffffff 50%,
+      var(--c-accent) 65%,
+      var(--c-accent) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: highlight-sweep-text 1.2s ease-in-out 11.15s 1 normal forwards;
+}
+
+@keyframes highlight-sweep-bg {
+  0% {
+    left: -150%;
+  }
+
+  100% {
+    left: 150%;
+  }
+}
+
+@keyframes highlight-sweep-text {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Respect user prefers-reduced-motion settings */
+@media (prefers-reduced-motion: reduce) {
+  .srm-card {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  .srm-cell--rev,
+  .srm-cell--sub {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  .srm-stat {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+  }
+
+  .chart-revealed .srm-card--target .srm-card__badge::after {
+    animation: none !important;
+  }
+
+  .chart-revealed .srm-card--target .srm-card__name--target,
+  .chart-revealed .srm-card--target .srm-stat__value--target {
+    background: none !important;
+    -webkit-text-fill-color: var(--c-accent) !important;
+    animation: none !important;
+  }
 }
 
 /* ── Company name row ───────────────────────────────────────────── */
@@ -1334,8 +1581,11 @@ table {
   font-weight: 800;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: #111113; /* dark text for contrast */
-  background-color: var(--c-accent); /* filled neon-green pill */
+  color: #111113 !important;
+  -webkit-text-fill-color: #111113 !important;
+  /* dark text for contrast */
+  background-color: var(--c-accent);
+  /* filled neon-green pill */
   border: none;
   padding: 2px 6px;
   border-radius: 999px;
@@ -1346,10 +1596,12 @@ table {
 .srm-matrix {
   display: grid;
   grid-template-columns: repeat(40, 1fr);
-  grid-auto-rows: 1fr;   /* rows equal column width → square cells */
+  grid-auto-rows: 1fr;
+  /* rows equal column width → square cells */
   gap: 1px;
   width: 100%;
-  aspect-ratio: 1 / 1;  /* container is a perfect square */
+  aspect-ratio: 1 / 1;
+  /* container is a perfect square */
   overflow: hidden;
   border-radius: 3px;
 }
@@ -1363,7 +1615,9 @@ table {
 /* Revenue cell — white fill (static) */
 .srm-cell--rev {
   background-color: var(--c-text-1);
-  opacity: 1;
+  opacity: 0;
+  transform: scale(0.95);
+  will-change: transform, opacity;
 }
 
 /* Target company — accent color instead of white */
@@ -1374,13 +1628,18 @@ table {
 /* Subscriber-only cell — dark outlined */
 .srm-cell--sub {
   background-color: transparent;
-  border: 1px solid rgba(250, 250, 250, 0.45); /* hollow outline with higher contrast */
+  border: 1px solid rgba(250, 250, 250, 0.45);
+  /* hollow outline with higher contrast */
+  opacity: 0;
+  transform: scale(0.95);
+  will-change: transform, opacity;
 }
 
 /* Empty / inactive cell — barely visible */
 .srm-cell--empty {
   background-color: transparent;
-  border: 1px solid rgba(250, 250, 250, 0.015); /* reduced opacity to minimize visual noise */
+  border: 1px solid rgba(250, 250, 250, 0.015);
+  /* reduced opacity to minimize visual noise */
 }
 
 /* ── Metrics row ─────────────────────────────────────────────────── */
@@ -1409,8 +1668,10 @@ table {
 
 .srm-stat__value {
   font-family: var(--font-sans);
-  font-size: 1.35rem; /* increased size */
-  font-weight: 800;   /* increased visual weight */
+  font-size: 1.35rem;
+  /* increased size */
+  font-weight: 800;
+  /* increased visual weight */
   letter-spacing: -0.03em;
   color: var(--c-text-1);
   line-height: 1.15;
@@ -1554,6 +1815,7 @@ table {
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto;
   }
+
   .cost-split__divider {
     flex-direction: row;
     gap: var(--sp-3);
@@ -1579,15 +1841,16 @@ table {
 .pool-cards::before {
   content: '';
   position: absolute;
-  top: 44px; /* vertically centred in the icon circle */
-  left: calc(var(--sp-4) + 22px); /* start after first icon */
+  top: 44px;
+  /* vertically centred in the icon circle */
+  left: calc(var(--sp-4) + 22px);
+  /* start after first icon */
   right: calc(var(--sp-4) + 22px);
   height: 1px;
   background: linear-gradient(to right,
-    var(--c-border) 0%,
-    var(--c-accent) 50%,
-    var(--c-border) 100%
-  );
+      var(--c-border) 0%,
+      var(--c-accent) 50%,
+      var(--c-border) 100%);
   z-index: 0;
 }
 
@@ -1606,13 +1869,26 @@ table {
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.pool-card--1 { transition-delay: 0ms; }
-.pool-card--2 { transition-delay: 100ms; }
-.pool-card--3 { transition-delay: 200ms; }
-.pool-card--4 { transition-delay: 300ms; border-color: var(--c-accent); background-color: rgba(216,255,62,0.02); }
+.pool-card--1 {
+  transition-delay: 0ms;
+}
+
+.pool-card--2 {
+  transition-delay: 100ms;
+}
+
+.pool-card--3 {
+  transition-delay: 200ms;
+}
+
+.pool-card--4 {
+  transition-delay: 300ms;
+  border-color: var(--c-accent);
+  background-color: rgba(216, 255, 62, 0.02);
+}
 
 /* Reveal state (added by JS) */
 .pool-card.pool-visible {
@@ -1700,7 +1976,7 @@ table {
   opacity: 0;
   transform: translateY(8px);
   transition: opacity 0.6s 0.45s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.6s 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    transform 0.6s 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .pool-total.pool-visible {
@@ -1737,6 +2013,7 @@ table {
   .pool-cards {
     grid-template-columns: repeat(2, 1fr);
   }
+
   .pool-cards::before {
     display: none;
   }
@@ -1754,8 +2031,15 @@ table {
    Pulse animation on the terminal (2025) data point
    ================================================================ */
 @keyframes glow-pulse {
-  0%, 100% { filter: drop-shadow(0 0 3px var(--c-accent)); }
-  50%       { filter: drop-shadow(0 0 8px var(--c-accent)) drop-shadow(0 0 14px var(--c-accent)); }
+
+  0%,
+  100% {
+    filter: drop-shadow(0 0 3px var(--c-accent));
+  }
+
+  50% {
+    filter: drop-shadow(0 0 8px var(--c-accent)) drop-shadow(0 0 14px var(--c-accent));
+  }
 }
 
 .chart-glow-point {
@@ -1771,7 +2055,7 @@ table {
   opacity: 0;
   transform: translateY(16px);
   transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .chart-block.chart-revealed {
@@ -1813,7 +2097,8 @@ table {
   margin: var(--sp-7) auto !important;
   border-radius: 12px !important;
   border: 1px solid var(--c-border) !important;
-  background-color: var(--c-surface-2) !important; /* Dark card surface */
+  background-color: var(--c-surface-2) !important;
+  /* Dark card surface */
   overflow: hidden;
   padding: var(--sp-4) !important;
   transition: border-color var(--dur-s) var(--ease) !important;
@@ -1821,13 +2106,15 @@ table {
 
 .media-video:hover,
 .media-video.media-video--active {
-  border-color: var(--c-accent) !important; /* Premium interactive accent highlight */
+  border-color: var(--c-accent) !important;
+  /* Premium interactive accent highlight */
 }
 
 .media-video__wrapper {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9 !important; /* Ensures no layout shifts */
+  aspect-ratio: 16 / 9 !important;
+  /* Ensures no layout shifts */
   border-radius: 8px !important;
   overflow: hidden;
   background-color: var(--c-bg) !important;
@@ -1879,7 +2166,8 @@ table {
   width: 64px !important;
   height: 64px !important;
   border-radius: 50% !important;
-  background-color: rgba(9, 9, 11, 0.9) !important; /* Dark matching --c-bg */
+  background-color: rgba(9, 9, 11, 0.9) !important;
+  /* Dark matching --c-bg */
   border: 2px solid var(--c-accent) !important;
   color: var(--c-accent) !important;
   display: flex !important;
@@ -1887,7 +2175,8 @@ table {
   justify-content: center !important;
   cursor: pointer !important;
   transition: all var(--dur-s) var(--ease) !important;
-  padding-left: 4px !important; /* Visual centering adjustment for triangle */
+  padding-left: 4px !important;
+  /* Visual centering adjustment for triangle */
   pointer-events: none !important;
   z-index: 3;
 }
@@ -1948,3 +2237,659 @@ table {
 }
 
 
+/* ================================================================
+   15. BRAND TITLE TYPEWRITER ANIMATION
+   ================================================================ */
+
+.typewriter-char {
+  display: inline;
+}
+
+/* Zero-width cursor container to prevent layout shifting of adjacent text */
+.typewriter-cursor {
+  display: inline-block;
+  width: 0;
+  height: 1.0em;
+  vertical-align: middle;
+  position: relative;
+  letter-spacing: normal;
+}
+
+/* Blinking cinematic vertical cursor */
+.typewriter-cursor::after {
+  content: '';
+  position: absolute;
+  left: 2px;
+  top: 0;
+  width: 4px;
+  /* proportional width */
+  height: 100%;
+  background-color: var(--c-accent);
+  animation: typewriter-blink 0.8s step-end infinite;
+  transition: opacity 0.4s ease;
+}
+
+.typewriter-cursor--fade-out::after {
+  opacity: 0;
+}
+
+@keyframes typewriter-blink {
+
+  from,
+  to {
+    background-color: transparent;
+  }
+
+  50% {
+    background-color: var(--c-accent);
+  }
+}
+
+
+/* ================================================================
+   16. REUSABLE CARD HOVER & INTERACTION SYSTEM
+   ================================================================ */
+
+/* Resting state transitions for GPU-friendly hover properties */
+.metric-card,
+.takeaway-card,
+.srm-card,
+.pool-card,
+.cost-split__card,
+.competitor-card,
+.comp-card {
+  transition: transform var(--dur-m) var(--ease),
+    border-color var(--dur-m) var(--ease),
+    box-shadow var(--dur-m) var(--ease),
+    background-color var(--dur-m) var(--ease) !important;
+  will-change: transform, border-color, box-shadow;
+}
+
+/* Ensure pool-card maintains its reveal animation layout along with hover styles */
+.pool-card {
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color var(--dur-m) var(--ease),
+    box-shadow var(--dur-m) var(--ease),
+    background-color var(--dur-m) var(--ease) !important;
+}
+
+/* Interactive states: Hover, Focus-Within, and Active (Touch) */
+.metric-card:hover,
+.takeaway-card:hover,
+.srm-card:hover,
+.pool-card.pool-visible:hover,
+.cost-split__card:hover,
+.competitor-card:hover,
+.comp-card:hover,
+.metric-card:focus-within,
+.takeaway-card:focus-within,
+.srm-card:focus-within,
+.pool-card.pool-visible:focus-within,
+.cost-split__card:focus-within,
+.competitor-card:focus-within,
+.comp-card:focus-within {
+  transform: translateY(-2px);
+  /* Very subtle translation, no scale change */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  /* Matching the page's standard card shadow */
+}
+
+/* Pressed/Active state for immediate feedback on touch/click */
+.metric-card:active,
+.takeaway-card:active,
+.srm-card:active,
+.pool-card.pool-visible:active,
+.cost-split__card:active,
+.competitor-card:active,
+.comp-card:active {
+  transform: translateY(0);
+  transition-duration: var(--dur-s) !important;
+}
+
+/* Subtle border color emphasis for elements that support border transitions */
+.metric-card:hover,
+.srm-card:not(.srm-card--target):hover,
+.pool-card:not(.pool-card--4):hover,
+.cost-split__card:not(.cost-split__card--accent):hover,
+.competitor-card:hover,
+.metric-card:focus-within,
+.srm-card:not(.srm-card--target):focus-within,
+.pool-card:not(.pool-card--4):focus-within,
+.cost-split__card:not(.cost-split__card--accent):focus-within,
+.competitor-card:focus-within {
+  border-color: var(--c-text-3);
+  /* Transition from --c-border to --c-text-3 */
+}
+
+/* Preserve target and accent styles while adapting their hover states */
+.cost-split__card--accent:hover,
+.cost-split__card--accent:focus-within {
+  border-color: var(--c-accent);
+}
+
+.pool-card--4:hover,
+.pool-card--4:focus-within {
+  border-color: var(--c-accent);
+}
+
+.srm-card--target:hover,
+.srm-card--target:focus-within {
+  border-color: var(--c-accent);
+}
+
+/* Respect user prefers-reduced-motion settings */
+@media (prefers-reduced-motion: reduce) {
+
+  .metric-card,
+  .takeaway-card,
+  .srm-card,
+  .pool-card,
+  .cost-split__card,
+  .competitor-card,
+  .comp-card {
+    transition: none !important;
+    will-change: auto;
+  }
+
+  .metric-card:hover,
+  .takeaway-card:hover,
+  .srm-card:hover,
+  .pool-card.pool-visible:hover,
+  .cost-split__card:hover,
+  .competitor-card:hover,
+  .comp-card:hover,
+  .metric-card:focus-within,
+  .takeaway-card:focus-within,
+  .srm-card:focus-within,
+  .pool-card.pool-visible:focus-within,
+  .cost-split__card:focus-within,
+  .competitor-card:focus-within,
+  .comp-card:focus-within {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+}
+
+
+/* ================================================================
+   17. FIGURE 1.1 REVEAL ANIMATION HELPERS
+   ================================================================ */
+
+.fig1-1-hidden {
+  opacity: 0 !important;
+}
+
+.fig1-1-fade-in {
+  opacity: 1 !important;
+  transition: opacity 0.25s ease !important;
+}
+
+
+/* ================================================================
+   18. FIGURE 1.3 POOL CONNECTOR PROGRESS ANIMATION
+   ================================================================ */
+
+/* Progress overlay line on top of original connector */
+.pool-cards-progress {
+  position: absolute;
+  top: 44px;
+  /* Centered in the card icon circles */
+  left: calc(var(--sp-4) + 22px);
+  width: 0%;
+  height: 1px;
+  background-color: var(--c-accent);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Traveling radial glow */
+.pool-cards-glow {
+  position: absolute;
+  top: 44px;
+  left: calc(var(--sp-4) + 22px);
+  width: 32px;
+  height: 32px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(216, 255, 62, 0.4) 0%, rgba(216, 255, 62, 0) 70%);
+  opacity: 0;
+  pointer-events: none;
+  z-index: 1;
+  transition: opacity 0.25s ease;
+}
+
+.pool-cards-glow.pool-glow-active {
+  opacity: 1;
+}
+
+/* On mobile/tablets, hide connector overlay and glow elements */
+@media (max-width: 820px) {
+
+  .pool-cards-progress,
+  .pool-cards-glow {
+    display: none !important;
+  }
+}
+
+/* Smooth transitions for all active card text and borders */
+.pool-card__icon,
+.pool-card__title,
+.pool-card__stat {
+  transition: color var(--dur-m) var(--ease),
+    border-color var(--dur-m) var(--ease) !important;
+}
+
+/* Full active card highlight state matching Card 4's static properties */
+.pool-card.pool-card--highlighted {
+  border-color: var(--c-accent) !important;
+  background-color: rgba(216, 255, 62, 0.02) !important;
+}
+
+.pool-card.pool-card--highlighted .pool-card__icon {
+  border-color: var(--c-accent) !important;
+  color: var(--c-accent) !important;
+}
+
+.pool-card.pool-card--highlighted .pool-card__title {
+  color: var(--c-accent) !important;
+}
+
+.pool-card.pool-card--highlighted .pool-card__stat {
+  color: var(--c-accent) !important;
+  border-color: rgba(216, 255, 62, 0.2) !important;
+}
+
+/* During active progress animation and interactive mode, override Card 4's static highlights */
+.pool-cards--animating .pool-card--4:not(.pool-card--highlighted),
+.pool-cards--interactive .pool-card--4:not(.pool-card--highlighted) {
+  border-color: var(--c-border) !important;
+  background-color: var(--c-surface-2) !important;
+}
+
+.pool-cards--animating .pool-card--4:not(.pool-card--highlighted) .pool-card__icon,
+.pool-cards--interactive .pool-card--4:not(.pool-card--highlighted) .pool-card__icon {
+  border-color: var(--c-border) !important;
+  color: var(--c-text-3) !important;
+}
+
+.pool-cards--animating .pool-card--4:not(.pool-card--highlighted) .pool-card__title,
+.pool-cards--interactive .pool-card--4:not(.pool-card--highlighted) .pool-card__title {
+  color: var(--c-text-1) !important;
+}
+
+.pool-cards--animating .pool-card--4:not(.pool-card--highlighted) .pool-card__stat,
+.pool-cards--interactive .pool-card--4:not(.pool-card--highlighted) .pool-card__stat {
+  color: var(--c-text-2) !important;
+  border-color: var(--c-border) !important;
+}
+
+/* Suppress default browser outline to match custom keyboard focus highlights */
+.pool-card:focus {
+  outline: none;
+}
+
+/* CHAPTER 10 — SECTION REVEAL MOTION SYSTEM */
+.reveal-pending {
+  opacity: 0 !important;
+  transform: translateY(16px) !important;
+  transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.75s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.reveal-active {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+}
+
+/* CHAPTER 8 — LEARNING JOURNEY TIMELINE MOTION SYSTEM */
+.process-step__node,
+.process-step__node-num,
+.process-step__label {
+  transition: background-color var(--dur-m) var(--ease),
+    border-color var(--dur-m) var(--ease),
+    color var(--dur-m) var(--ease) !important;
+}
+
+/* Active and completed connector lines leading to steps */
+.process-step::before {
+  transition: background-color var(--dur-m) var(--ease) !important;
+}
+
+.process-step.process-step--active::before,
+.process-step.process-step--completed::before {
+  background-color: var(--c-accent) !important;
+}
+
+
+/* CHAPTER 9 — PROGRESS ROADMAP MOTION SYSTEM */
+.roadmap-progress-bar {
+  position: absolute;
+  left: 24px;
+  top: 0;
+  width: 2px;
+  background-color: var(--c-accent);
+  z-index: 1;
+  transform-origin: top;
+  transform: scaleY(0);
+  transition: transform 0.1s linear !important;
+}
+
+.roadmap-glow-dot {
+  position: absolute;
+  left: 25px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0, 232, 122, 0.5) 0%, rgba(0, 232, 122, 0) 70%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.2s ease, top 0.1s linear !important;
+}
+
+.roadmap-glow-dot.roadmap-glow--active {
+  opacity: 1;
+}
+
+/* Roadmap Node active states */
+.roadmap-node>div,
+.roadmap-node div>span,
+.roadmap-node div>strong,
+.roadmap-node div>h4,
+.roadmap-node div>p {
+  transition: border-color var(--dur-m) var(--ease),
+    background-color var(--dur-m) var(--ease),
+    color var(--dur-m) var(--ease),
+    box-shadow var(--dur-m) var(--ease),
+    padding var(--dur-m) var(--ease) !important;
+}
+
+/* Override properties for the active roadmap card and bullet */
+.roadmap-node--active>div:first-child {
+  width: 18px !important;
+  height: 18px !important;
+  left: 16px !important;
+  top: 16px !important;
+  background: var(--c-accent) !important;
+  border: 3px solid var(--c-bg) !important;
+  box-shadow: 0 0 10px var(--c-accent) !important;
+}
+
+.roadmap-node--active>div:nth-child(2) {
+  background: var(--c-surface-1-dim) !important;
+  border: 2px solid var(--c-accent) !important;
+  padding: var(--sp-5) var(--sp-6) !important;
+  box-shadow: 0 4px 20px rgba(0, 232, 122, 0.15) !important;
+}
+
+.roadmap-node--active div>span {
+  color: var(--c-accent) !important;
+}
+
+/* Strategic Climax custom heading text-shadow for Phase 05 */
+.roadmap-node--active.roadmap-node--climax div>span:nth-of-type(2) {
+  text-shadow: 0 0 8px rgba(0, 232, 122, 0.2) !important;
+}
+
+.roadmap-node--active div>h4 {
+  color: var(--c-text-1) !important;
+}
+
+.roadmap-node--active div>strong {
+  color: var(--c-accent) !important;
+}
+
+.roadmap-node--active div>p {
+  color: var(--c-text-2) !important;
+}
+
+.roadmap-node--active .roadmap-grid {
+  border-top-color: rgba(0, 232, 122, 0.2) !important;
+}
+
+/* Horizontal Pipeline States */
+.pipeline-state {
+  transition: border-color var(--dur-m) var(--ease),
+    background-color var(--dur-m) var(--ease),
+    color var(--dur-m) var(--ease),
+    box-shadow var(--dur-m) var(--ease) !important;
+}
+
+.pipeline-state--active {
+  background: var(--c-surface-1-dim) !important;
+  border: 1.5px solid var(--c-accent) !important;
+  box-shadow: 0 0 8px rgba(0, 232, 122, 0.15) !important;
+}
+
+.pipeline-state--active span {
+  color: var(--c-accent) !important;
+  font-weight: bold !important;
+}
+
+.pipeline-state--active strong {
+  color: var(--c-accent) !important;
+  font-weight: bold !important;
+}
+
+/* Prefers Reduced Motion Overrides */
+@media (prefers-reduced-motion: reduce) {
+  .reveal-pending {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .process-step__node,
+  .process-step__node-num,
+  .process-step__label,
+  .roadmap-node>div,
+  .roadmap-node span,
+  .roadmap-node strong,
+  .roadmap-node h4,
+  .pipeline-state {
+    transition: none !important;
+  }
+
+  .roadmap-progress-bar {
+    transform: scaleY(1) !important;
+    transition: none !important;
+  }
+
+  .roadmap-glow-dot {
+    display: none !important;
+  }
+}
+
+/* --- Flow Connector Arrows Mobile Optimization --- */
+
+/* Keyframe Animations for Vertical Idle Translation */
+@keyframes flow-arrow-translate-h {
+
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  50% {
+    transform: translateX(3px);
+  }
+}
+
+@keyframes flow-arrow-translate-v {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(3px);
+  }
+}
+
+/* Reusable Connector Arrow styles on Mobile */
+@media (max-width: 768px) {
+
+  /* Stack containers vertically */
+  .process-flow-container,
+  .subscriber-flow,
+  .roadmap-pipeline {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: var(--sp-3) !important;
+  }
+
+  /* Prevent cards from stretching too much */
+  .process-flow-container>div,
+  .subscriber-flow__card,
+  .pipeline-state,
+  .framework-card,
+  .framework-card--highlight {
+    width: 100% !important;
+    max-width: 280px !important;
+  }
+
+  /* =======================================================
+   Universal Flow Arrows
+   ======================================================= */
+
+  .flow-arrow {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: 20px !important;
+    height: 20px !important;
+
+    flex-shrink: 0 !important;
+
+    margin: 8px auto !important;
+
+    position: static !important;
+
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+  }
+
+  /* Horizontal arrows */
+  .flow-arrow--h {
+    animation: flow-arrow-translate-h 2.5s ease-in-out infinite !important;
+  }
+
+  /* Vertical arrows */
+  .flow-arrow--v {
+    display: flex !important;
+    animation: flow-arrow-translate-v 2.5s ease-in-out infinite !important;
+  }
+
+}
+
+/* Keep max-width 900px specifically for subscriber flow stacking */
+@media (max-width: 900px) {
+  .subscriber-flow {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: var(--sp-3) !important;
+  }
+
+  .subscriber-flow__card {
+    width: 100% !important;
+    max-width: 280px !important;
+  }
+
+  .subscriber-flow__arrow {
+    display: block !important;
+    width: 16px !important;
+    height: 16px !important;
+    flex-shrink: 0 !important;
+    align-self: center !important;
+    margin: var(--sp-2) auto !important;
+    animation: flow-arrow-translate-h 2.5s ease-in-out infinite !important;
+  }
+
+  /* Mobile overrides */
+  @media (max-width: 900px) {
+
+    .flow-arrow--h {
+      display: none !important;
+    }
+
+    .flow-arrow--v {
+      display: flex !important;
+
+      width: 24px !important;
+      height: 24px !important;
+
+      min-width: 24px !important;
+      max-width: 24px !important;
+
+      min-height: 24px !important;
+      max-height: 24px !important;
+
+      overflow: hidden !important;
+
+    }
+
+
+  }
+}
+
+/* Ensure roadmap pipeline stacks below 640px too */
+@media (max-width: 640px) {
+  .roadmap-pipeline {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: var(--sp-3) !important;
+  }
+
+  .pipeline-state {
+    width: 100% !important;
+    max-width: 280px !important;
+  }
+
+  .pipeline-arrow {
+    display: flex !important;
+
+    align-items: center !important;
+    justify-content: center !important;
+
+    width: 20px !important;
+    height: 20px !important;
+
+    min-width: 20px !important;
+    max-width: 20px !important;
+
+    min-height: 20px !important;
+    max-height: 20px !important;
+
+    overflow: hidden !important;
+
+    margin: 8px auto !important;
+
+    flex-shrink: 0 !important;
+
+    align-self: center !important;
+
+    animation: flow-arrow-translate-v 2.5s ease-in-out infinite !important;
+  }
+
+  .pipeline-arrow polyline {
+    stroke: var(--c-accent) !important;
+  }
+}
+
+/* Respect user prefers-reduced-motion for the idle translation */
+/* @media (prefers-reduced-motion: reduce) {
+  .flow-arrow--h {
+    animation: none !important;
+    transform: rotate(90deg) !important;
+  }
+
+  .flow-arrow--v {
+    animation: none !important;
+    transform: none !important;
+  }
+} */
