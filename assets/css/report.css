@@ -1493,7 +1493,6 @@ table {
   border-radius: 1px;
   aspect-ratio: 1 / 1;
   transition: opacity 120ms ease-out, transform 120ms ease-out, background-color 120ms ease-out, border-color 120ms ease-out;
-  will-change: opacity, transform, background-color, border-color;
 }
 
 /* Hidden cell state */

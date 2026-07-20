@@ -498,6 +498,10 @@ const SubscriberRevenueMatrix = {
     company.currentCount = -1;
     company.currentFilled = -1;
     company.currentCleared = -1;
+    company.lastTargetCount = 0;
+    company.lastTargetFilled = 0;
+    company.lastTargetCleared = 0;
+    company.lastElapsed = 0;
 
     // Precompute diagonal indices for Phase 1 construction
     const cols = this.GRID_COLS;
@@ -602,6 +606,10 @@ const SubscriberRevenueMatrix = {
       company.currentCount = -1;
       company.currentFilled = -1;
       company.currentCleared = -1;
+      company.lastTargetCount = 0;
+      company.lastTargetFilled = 0;
+      company.lastTargetCleared = 0;
+      company.lastElapsed = 0;
 
       if (company.activeCells) {
         const cells = company.activeCells;
@@ -645,6 +653,22 @@ const SubscriberRevenueMatrix = {
     const p3 = 1200; // Pause duration (1.2s)
     const p4 = 800;  // Soft reset / clearing wave duration (0.8s)
 
+    // Detect loop wrap-around reset
+    if (elapsed < company.lastElapsed) {
+      company.lastTargetCount = 0;
+      company.lastTargetFilled = 0;
+      company.lastTargetCleared = 0;
+
+      // Force synchronous reset of all cells to hidden/initial state to prevent any remaining cells from previous cycle
+      const cells = company.activeCells;
+      const totalActive = cells.length;
+      for (let i = 0; i < totalActive; i++) {
+        cells[i].className = 'srm-cell srm-cell--hidden';
+        company.cellStates[i] = 'hidden';
+      }
+    }
+    company.lastElapsed = elapsed;
+
     if (elapsed < p1) {
       // Phase 1: Grid Construction (0ms -> 1500ms)
       const progress = elapsed / p1;
@@ -680,49 +704,68 @@ const SubscriberRevenueMatrix = {
       const diagIndices = company.diagonalIndices;
 
       if (elapsed < p1) {
-        // Phase 1: Construction (reveal diagonally)
-        for (let idx = 0; idx < totalActive; idx++) {
-          const cellIndex = diagIndices[idx];
-          const cell = cells[cellIndex];
-          if (idx < targetCount) {
+        // Phase 1: Construction (reveal diagonally in O(delta) operations)
+        const from = company.lastTargetCount;
+        const to = targetCount;
+        if (to > from) {
+          for (let idx = from; idx < to; idx++) {
+            const cellIndex = diagIndices[idx];
+            const cell = cells[cellIndex];
             if (company.cellStates[cellIndex] !== 'sub') {
               cell.className = 'srm-cell srm-cell--sub';
               company.cellStates[cellIndex] = 'sub';
             }
-          } else {
+          }
+        } else if (to < from) {
+          for (let idx = to; idx < from; idx++) {
+            const cellIndex = diagIndices[idx];
+            const cell = cells[cellIndex];
             if (company.cellStates[cellIndex] !== 'hidden') {
               cell.className = 'srm-cell srm-cell--hidden';
               company.cellStates[cellIndex] = 'hidden';
             }
           }
         }
+        company.lastTargetCount = targetCount;
       } else if (elapsed < p1 + p2 + p3) {
-        // Phase 2 & 3: Revenue Fill & Pause (reveal sequentially row-by-row)
-        for (let i = 0; i < totalActive; i++) {
-          const cell = cells[i];
-          if (i < targetFilled) {
+        // Phase 2 & 3: Revenue Fill & Pause (reveal sequentially row-by-row in O(delta) operations)
+        const from = company.lastTargetFilled;
+        const to = targetFilled;
+        if (to > from) {
+          for (let i = from; i < to; i++) {
+            const cell = cells[i];
             if (company.cellStates[i] !== 'rev') {
               cell.className = 'srm-cell srm-cell--rev';
               company.cellStates[i] = 'rev';
             }
-          } else {
+          }
+        } else if (to < from) {
+          for (let i = to; i < from; i++) {
+            const cell = cells[i];
             if (company.cellStates[i] !== 'sub') {
               cell.className = 'srm-cell srm-cell--sub';
               company.cellStates[i] = 'sub';
             }
           }
         }
+        company.lastTargetFilled = targetFilled;
       } else {
-        // Phase 4: Diagonal Clear (hide diagonally from top-left to bottom-right)
-        for (let idx = 0; idx < totalActive; idx++) {
-          const cellIndex = diagIndices[idx];
-          const cell = cells[cellIndex];
-          if (idx < targetCleared) {
+        // Phase 4: Diagonal Clear (hide diagonally from top-left to bottom-right in O(delta) operations)
+        const from = company.lastTargetCleared;
+        const to = targetCleared;
+        if (to > from) {
+          for (let idx = from; idx < to; idx++) {
+            const cellIndex = diagIndices[idx];
+            const cell = cells[cellIndex];
             if (company.cellStates[cellIndex] !== 'hidden') {
               cell.className = 'srm-cell srm-cell--hidden';
               company.cellStates[cellIndex] = 'hidden';
             }
-          } else {
+          }
+        } else if (to < from) {
+          for (let idx = to; idx < from; idx++) {
+            const cellIndex = diagIndices[idx];
+            const cell = cells[cellIndex];
             const expectedState = cellIndex < revCells ? 'rev' : 'sub';
             if (company.cellStates[cellIndex] !== expectedState) {
               cell.className = `srm-cell srm-cell--${expectedState}`;
@@ -730,6 +773,7 @@ const SubscriberRevenueMatrix = {
             }
           }
         }
+        company.lastTargetCleared = targetCleared;
       }
 
       company.currentCount = targetCount;
