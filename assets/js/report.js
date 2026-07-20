@@ -437,24 +437,39 @@ const SubscriberRevenueMatrix = {
     { id: 'neurocrack', name: 'NeuroCrack', subscribers: 100000, revenue: 15, isTarget: true }
   ],
 
+  /* ── Animation State ───────────────────────────────────────────── */
+  anim: {
+    requestRef: null,
+    startTime: null,
+    isPlaying: false,
+    observer: null,
+    durationPhase1: 1500, // Construction phase (1.5s)
+    durationPhase2: 1500, // Revenue Fill phase (1.5s)
+    durationPhase3: 2000, // Reading Pause phase (2.0s)
+    totalDuration: 5000   // Total loop (5.0s)
+  },
+
   /* ── Bootstrap ─────────────────────────────────────────────────── */
   init() {
     const container = document.getElementById('srm-container');
     if (!container) return;
 
-    this.data.forEach((company, index) => {
-      // 1 unit = 1 cell.
-      // Subscribers: 500K -> 500 cells, 100K -> 100 cells, 40K -> 40 cells
-      const subCells = Math.round(company.subscribers / 1000);
-      // Revenue: ₹700 Cr -> 700 cells, ₹140 Cr -> 140 cells, ₹75 Cr -> 75 cells, ₹150 Cr -> 150 cells
-      const revCells = company.revenue;
+    // Reset container to avoid duplication
+    container.innerHTML = '';
 
+    // Render cards and prepare animation buffers
+    this.data.forEach((company, index) => {
+      const subCells = Math.round(company.subscribers / 1000);
+      const revCells = company.revenue;
       container.appendChild(this._buildCard(company, subCells, revCells, index));
     });
+
+    // Set up IntersectionObserver to trigger and pause animation based on viewport visibility
+    this._initObserver();
   },
 
   /* ── Build one company card ─────────────────────────────────────── */
-  _buildCard(company, subCells, revCells, cardIndex) {
+  _buildCard(company, subCells, revCells, index) {
     const card = document.createElement('div');
     card.className = 'srm-card' + (company.isTarget ? ' srm-card--target' : '');
 
@@ -473,41 +488,46 @@ const SubscriberRevenueMatrix = {
     const container = document.createElement('div');
     container.className = 'srm-matrix-container';
 
-    /* Background Matrix (1600 empty cells) */
-    const matrixBg = document.createElement('div');
-    matrixBg.className = 'srm-matrix srm-matrix--bg';
+    /* Single Matrix Grid Layer */
+    const matrix = document.createElement('div');
+    matrix.className = 'srm-matrix';
+
+    const totalActive = revCells + subCells;
+    company.activeCells = [];
+    company.cellStates = []; // Tracks actual state of active cells ('hidden', 'sub', 'rev')
+    company.currentCount = -1;
+    company.currentFilled = -1;
+    company.currentCleared = -1;
+
+    // Precompute diagonal indices for Phase 1 construction
+    const cols = this.GRID_COLS;
+    company.diagonalIndices = Array.from({length: totalActive}, (_, i) => i);
+    company.diagonalIndices.sort((a, b) => {
+      const colA = a % cols;
+      const rowA = Math.floor(a / cols);
+      const colB = b % cols;
+      const rowB = Math.floor(b / cols);
+      const diagA = colA + rowA;
+      const diagB = colB + rowB;
+      if (diagA !== diagB) return diagA - diagB;
+      return colA - colB; // Left-to-right flow break to make diagonal reveal look organic and smooth
+    });
+
     for (let i = 0; i < this.TOTAL_CELLS; i++) {
       const cell = document.createElement('div');
-      cell.className = 'srm-cell srm-cell--empty';
-      matrixBg.appendChild(cell);
-    }
-
-    /* Foreground Matrix (actual cells) */
-    const baseDelay = 750 + cardIndex * 2850;
-    const matrixFg = document.createElement('div');
-    matrixFg.className = 'srm-matrix srm-matrix--fg';
-    for (let i = 0; i < this.TOTAL_CELLS; i++) {
-      const cell = document.createElement('div');
-      const isRev = i < revCells;
-      const isSub = !isRev && i < (revCells + subCells);
-
-      if (isRev) {
-        cell.className = 'srm-cell srm-cell--rev srm-cell--rev-on';
-      } else if (isSub) {
-        cell.className = 'srm-cell srm-cell--sub';
+      if (i < totalActive) {
+        // Active cell (part of the subscriber capacity or revenue)
+        cell.className = 'srm-cell srm-cell--hidden';
+        company.activeCells.push(cell);
+        company.cellStates.push('hidden');
       } else {
+        // Inactive background cell
         cell.className = 'srm-cell srm-cell--empty';
       }
-
-      if (isRev || isSub) {
-        const col = i % this.GRID_COLS;
-        cell.style.animationDelay = `${baseDelay + col * 25}ms`;
-      }
-      matrixFg.appendChild(cell);
+      matrix.appendChild(cell);
     }
 
-    container.appendChild(matrixBg);
-    container.appendChild(matrixFg);
+    container.appendChild(matrix);
 
     /* Labels / Metrics below the matrix */
     const meta = document.createElement('div');
@@ -542,6 +562,180 @@ const SubscriberRevenueMatrix = {
     wrap.appendChild(lbl);
     wrap.appendChild(val);
     return wrap;
+  },
+
+  /* ── Viewport Intersection Observer ────────────────────────────── */
+  _initObserver() {
+    const targetFigure = document.getElementById('fig-srm');
+    if (!targetFigure) return;
+
+    const component = {
+      start: () => this.startAnimation(),
+      stop: () => this.pauseAnimation(),
+      reset: () => this.pauseAnimation()
+    };
+
+    AnimationManager.register(targetFigure, component);
+  },
+
+  /* ── Animation Controls ────────────────────────────────────────── */
+  startAnimation() {
+    if (this.anim.isPlaying) return;
+    this.anim.isPlaying = true;
+    this.anim.startTime = null; // Will calibrate on first animation frame
+    this.anim.requestRef = requestAnimationFrame((timestamp) => this._loop(timestamp));
+  },
+
+  pauseAnimation() {
+    if (!this.anim.isPlaying) return;
+    this.anim.isPlaying = false;
+    if (this.anim.requestRef) {
+      cancelAnimationFrame(this.anim.requestRef);
+      this.anim.requestRef = null;
+    }
+
+    // Reset animation clock
+    this.anim.startTime = null;
+
+    // Reset all active cells back to hidden/initial state
+    this.data.forEach(company => {
+      company.currentCount = -1;
+      company.currentFilled = -1;
+      company.currentCleared = -1;
+
+      if (company.activeCells) {
+        const cells = company.activeCells;
+        const totalActive = cells.length;
+        for (let i = 0; i < totalActive; i++) {
+          cells[i].className = 'srm-cell srm-cell--hidden';
+          company.cellStates[i] = 'hidden';
+        }
+      }
+    });
+  },
+
+  /* ── Animation Loop ────────────────────────────────────────────── */
+  _loop(timestamp) {
+    if (!this.anim.isPlaying) return;
+
+    if (!this.anim.startTime) {
+      this.anim.startTime = timestamp;
+    }
+
+    const elapsed = (timestamp - this.anim.startTime) % this.anim.totalDuration;
+
+    // Simultaneously update all company grids
+    this.data.forEach(company => {
+      this._updateGrid(company, elapsed);
+    });
+
+    this.anim.requestRef = requestAnimationFrame((ts) => this._loop(ts));
+  },
+
+  _updateGrid(company, elapsed) {
+    const totalActive = company.activeCells.length;
+    const revCells = company.revenue;
+
+    let targetCount = 0;
+    let targetFilled = 0;
+    let targetCleared = 0;
+
+    const p1 = this.anim.durationPhase1; // 1500
+    const p2 = this.anim.durationPhase2; // 1500
+    const p3 = 1200; // Pause duration (1.2s)
+    const p4 = 800;  // Soft reset / clearing wave duration (0.8s)
+
+    if (elapsed < p1) {
+      // Phase 1: Grid Construction (0ms -> 1500ms)
+      const progress = elapsed / p1;
+      targetCount = Math.floor(progress * totalActive);
+      targetFilled = 0;
+      targetCleared = 0;
+    } else if (elapsed < p1 + p2) {
+      // Phase 2: Revenue Fill (1500ms -> 3000ms)
+      const progress = (elapsed - p1) / p2;
+      targetCount = totalActive;
+      targetFilled = Math.floor(progress * revCells);
+      targetCleared = 0;
+    } else if (elapsed < p1 + p2 + p3) {
+      // Phase 3: Reading Pause (3000ms -> 4200ms)
+      targetCount = totalActive;
+      targetFilled = revCells;
+      targetCleared = 0;
+    } else {
+      // Phase 4: Diagonal Clear (4200ms -> 5000ms)
+      const progress = (elapsed - (p1 + p2 + p3)) / p4;
+      targetCount = totalActive;
+      targetFilled = revCells;
+      targetCleared = Math.floor(progress * totalActive);
+    }
+
+    // Only update elements when values change (extremely performant $O(\Delta)$ updates)
+    if (
+      company.currentCount !== targetCount ||
+      company.currentFilled !== targetFilled ||
+      company.currentCleared !== targetCleared
+    ) {
+      const cells = company.activeCells;
+      const diagIndices = company.diagonalIndices;
+
+      if (elapsed < p1) {
+        // Phase 1: Construction (reveal diagonally)
+        for (let idx = 0; idx < totalActive; idx++) {
+          const cellIndex = diagIndices[idx];
+          const cell = cells[cellIndex];
+          if (idx < targetCount) {
+            if (company.cellStates[cellIndex] !== 'sub') {
+              cell.className = 'srm-cell srm-cell--sub';
+              company.cellStates[cellIndex] = 'sub';
+            }
+          } else {
+            if (company.cellStates[cellIndex] !== 'hidden') {
+              cell.className = 'srm-cell srm-cell--hidden';
+              company.cellStates[cellIndex] = 'hidden';
+            }
+          }
+        }
+      } else if (elapsed < p1 + p2 + p3) {
+        // Phase 2 & 3: Revenue Fill & Pause (reveal sequentially row-by-row)
+        for (let i = 0; i < totalActive; i++) {
+          const cell = cells[i];
+          if (i < targetFilled) {
+            if (company.cellStates[i] !== 'rev') {
+              cell.className = 'srm-cell srm-cell--rev';
+              company.cellStates[i] = 'rev';
+            }
+          } else {
+            if (company.cellStates[i] !== 'sub') {
+              cell.className = 'srm-cell srm-cell--sub';
+              company.cellStates[i] = 'sub';
+            }
+          }
+        }
+      } else {
+        // Phase 4: Diagonal Clear (hide diagonally from top-left to bottom-right)
+        for (let idx = 0; idx < totalActive; idx++) {
+          const cellIndex = diagIndices[idx];
+          const cell = cells[cellIndex];
+          if (idx < targetCleared) {
+            if (company.cellStates[cellIndex] !== 'hidden') {
+              cell.className = 'srm-cell srm-cell--hidden';
+              company.cellStates[cellIndex] = 'hidden';
+            }
+          } else {
+            const expectedState = cellIndex < revCells ? 'rev' : 'sub';
+            if (company.cellStates[cellIndex] !== expectedState) {
+              cell.className = `srm-cell srm-cell--${expectedState}`;
+              company.cellStates[cellIndex] = expectedState;
+            }
+          }
+        }
+      }
+
+      company.currentCount = targetCount;
+      company.currentFilled = targetFilled;
+      company.currentCleared = targetCleared;
+    }
   }
 };
 
@@ -932,9 +1126,51 @@ const VideoCardManager = {
 
 
 /**
+ * Shared Animation Manager
+ * Registers animated elements and manages their start, loop, stop, and reset cycles
+ * using a single, unified IntersectionObserver to optimize CPU utilization.
+ */
+const AnimationManager = {
+  observer: null,
+  registry: new Map(),
+
+  init() {
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const component = this.registry.get(entry.target);
+        if (!component) return;
+
+        if (entry.isIntersecting) {
+          component.start();
+        } else {
+          component.stop();
+          component.reset();
+        }
+      });
+    }, { threshold: 0.05 });
+  },
+
+  register(element, component) {
+    if (!this.observer) {
+      this.init();
+    }
+    this.registry.set(element, component);
+    this.observer.observe(element);
+    component.reset(); // Initialize component to off-screen / reset state
+  },
+
+  unregister(element) {
+    if (this.observer) {
+      this.observer.unobserve(element);
+    }
+    this.registry.delete(element);
+  }
+};
+
+
+/**
  * 8. Main "Neurocrack" Brand Title Typewriter Animation
- * Handles sequential character reveal with a blinking cursor,
- * preserving layout width and ensuring a single-execution flow on page load.
+ * Refactored to loop while visible and reset to empty when offscreen.
  */
 const BrandTypewriter = {
   init() {
@@ -945,8 +1181,6 @@ const BrandTypewriter = {
     brand.innerHTML = '';
 
     const fragment = document.createDocumentFragment();
-
-    // Create character spans
     const chars = text.split('').map(char => {
       const span = document.createElement('span');
       span.textContent = char;
@@ -956,48 +1190,76 @@ const BrandTypewriter = {
       return span;
     });
 
-    // Create cursor element
     const cursor = document.createElement('span');
     cursor.className = 'typewriter-cursor';
-
-    // Insert cursor at the beginning
     fragment.insertBefore(cursor, chars[0]);
     brand.appendChild(fragment);
 
-    // Typing speed: ~80ms per character
-    const typingSpeed = 80;
-    let currentCharIndex = 0;
+    const component = {
+      timeoutRef: null,
+      timeoutRef2: null,
+      timeoutRef3: null,
+      currentCharIndex: 0,
+      isPlaying: false,
 
-    const type = () => {
-      if (currentCharIndex < chars.length) {
-        chars[currentCharIndex].style.visibility = 'visible';
-        brand.insertBefore(cursor, chars[currentCharIndex].nextSibling);
-        currentCharIndex++;
-        setTimeout(type, typingSpeed);
-      } else {
-        // Typing complete: fade out cursor and then remove it
-        cursor.classList.add('typewriter-cursor--fade-out');
-        setTimeout(() => {
-          cursor.remove();
-        }, 500);
+      start() {
+        if (this.isPlaying) return;
+        this.isPlaying = true;
+        this.type();
+      },
+
+      stop() {
+        this.isPlaying = false;
+        if (this.timeoutRef) clearTimeout(this.timeoutRef);
+        if (this.timeoutRef2) clearTimeout(this.timeoutRef2);
+        if (this.timeoutRef3) clearTimeout(this.timeoutRef3);
+      },
+
+      reset() {
+        this.stop();
+        this.currentCharIndex = 0;
+        chars.forEach(span => {
+          span.style.visibility = 'hidden';
+        });
+        cursor.classList.remove('typewriter-cursor--fade-out');
+        if (!brand.contains(cursor)) {
+          brand.insertBefore(cursor, chars[0]);
+        } else {
+          brand.insertBefore(cursor, chars[0]);
+        }
+      },
+
+      type() {
+        if (!this.isPlaying) return;
+
+        if (this.currentCharIndex < chars.length) {
+          chars[this.currentCharIndex].style.visibility = 'visible';
+          brand.insertBefore(cursor, chars[this.currentCharIndex].nextSibling);
+          this.currentCharIndex++;
+          this.timeoutRef = setTimeout(() => this.type(), 80);
+        } else {
+          // Completed typing: fade cursor out, wait, then remove, then restart loop
+          cursor.classList.add('typewriter-cursor--fade-out');
+          this.timeoutRef2 = setTimeout(() => {
+            cursor.remove();
+            this.timeoutRef3 = setTimeout(() => {
+              this.reset();
+              this.start();
+            }, 3000); // 3-second pause at completed title before loop restart
+          }, 500);
+        }
       }
     };
 
-    // Begin typing sequence with a small delay for dramatic cinematic effect (150ms)
-    setTimeout(type, 150);
+    AnimationManager.register(brand, component);
   }
 };
 
 
 /**
- * 9. Figure 1.1 (MBBS Seats Growth Line Chart) Progressive Draw Animation
- * Animates the SVG path from left to right when it enters the viewport.
- * Coordinates reveal of dots and terminal text without any layout shift.
- */
-/**
- * Reusable Trend Graph Animation Engine (Chapter 6)
- * Handles progressive path drawing, staggered dots, terminal glowing point,
- * and final text label fades for single-series line graphs.
+ * 9. Reusable Trend Graph Animation Engine
+ * Progressive path draw, intermediate dots, glowing marker, and label reveals.
+ * Loops while visible and cleans up timers/listeners completely offscreen.
  */
 const TrendGraphEngine = {
   init(figureId) {
@@ -1008,143 +1270,154 @@ const TrendGraphEngine = {
     const path = svg ? svg.querySelector('path') : null;
     if (!path) return;
 
-    // Discover data point circles dynamically:
-    // They are siblings coming after the path in the SVG.
     const allCircles = Array.from(svg.querySelectorAll('circle'));
     const pathIndex = allCircles.findIndex(c => path.compareDocumentPosition(c) & Node.DOCUMENT_POSITION_FOLLOWING);
     const trailingCircles = pathIndex >= 0 ? allCircles.slice(pathIndex) : [];
 
-    // Filter intermediate points and terminal glowing point
     const intermediatePoints = trailingCircles.filter(c => !c.classList.contains('chart-glow-point'));
     const terminalPoint = trailingCircles.find(c => c.classList.contains('chart-glow-point'));
 
-    // Discover the terminal label dynamically (last text element inside SVG)
     const textElements = svg.querySelectorAll('text');
     const terminalLabel = textElements.length > 0 ? textElements[textElements.length - 1] : null;
 
-    // Cache points data to avoid DOM queries inside animation frames
     const pointData = intermediatePoints.map(el => ({
       element: el,
       cx: parseFloat(el.getAttribute('cx') || 0)
     }));
 
-    // Calculate length of the path for stroke-dasharray and stroke-dashoffset
     const pathLength = path.getTotalLength();
+    const duration = Math.round(pathLength * 3.1);
 
-    // Check for prefers-reduced-motion
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) {
-      path.style.strokeDasharray = 'none';
-      path.style.strokeDashoffset = '0';
-      return;
-    }
+    const component = {
+      requestRef: null,
+      timeoutRef1: null,
+      timeoutRef2: null,
+      timeoutRef3: null,
+      isPlaying: false,
+      startTime: null,
 
-    // Hide components by adding CSS helper class before animation starts
-    pointData.forEach(pt => pt.element.classList.add('fig1-1-hidden'));
-    if (terminalPoint) terminalPoint.classList.add('fig1-1-hidden');
-    if (terminalLabel) terminalLabel.classList.add('fig1-1-hidden');
-
-    // Set initial dasharray and fully offset it
-    path.style.strokeDasharray = pathLength;
-    path.style.strokeDashoffset = pathLength;
-
-    let hasAnimated = false;
-
-    // IntersectionObserver scroll trigger (runs only once per session)
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !hasAnimated) {
-        hasAnimated = true;
-        observer.disconnect();
-
-        // Calculate a natural speed-dependent duration (e.g. length * 3.1ms, approx 2100ms)
-        const duration = Math.round(pathLength * 3.1);
-
-        this.animateLine(path, pathLength, pointData, terminalPoint, terminalLabel, duration);
-      }
-    }, { threshold: 0.1 });
-
-    observer.observe(figure);
-  },
-
-  animateLine(path, pathLength, pointData, terminalPoint, terminalLabel, duration) {
-    const startTime = performance.now();
-
-    const draw = (now) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-
-      // Smooth ease-out curve (quadratic)
-      const easedProgress = 1 - Math.pow(1 - progress, 2);
-
-      // Update stroke dashoffset
-      const currentOffset = pathLength * (1 - easedProgress);
-      path.style.strokeDashoffset = currentOffset;
-
-      // Find current X coordinate of the leading path tip
-      const currentLength = pathLength * easedProgress;
-      const currentPoint = path.getPointAtLength(currentLength);
-      const currentX = currentPoint.x;
-
-      // Reveal intermediate points as soon as line tip reaches their x-coordinate
-      pointData.forEach(pt => {
-        if (currentX >= pt.cx - 1.5) {
-          pt.element.classList.remove('fig1-1-hidden');
-          pt.element.classList.add('fig1-1-fade-in');
-        }
-      });
-
-      if (progress < 1) {
-        requestAnimationFrame(draw);
-      } else {
-        // Line drawing completed. Clean up line styles.
-        path.style.strokeDasharray = 'none';
-        path.style.strokeDashoffset = '0';
-
-        // Reveal remaining intermediate points (safety pass)
-        pointData.forEach(pt => {
-          pt.element.classList.remove('fig1-1-hidden');
-          pt.element.classList.add('fig1-1-fade-in');
-        });
-
-        // Staggered terminal sequence:
-        // Wait 120ms, then reveal glowing terminal point
-        setTimeout(() => {
+      start() {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) {
+          path.style.strokeDasharray = 'none';
+          path.style.strokeDashoffset = '0';
+          pointData.forEach(pt => {
+            pt.element.classList.remove('fig1-1-hidden');
+            pt.element.classList.add('fig1-1-fade-in');
+          });
           if (terminalPoint) {
             terminalPoint.classList.remove('fig1-1-hidden');
             terminalPoint.classList.add('fig1-1-fade-in');
           }
+          if (terminalLabel) {
+            terminalLabel.classList.remove('fig1-1-hidden');
+            terminalLabel.classList.add('fig1-1-fade-in');
+          }
+          return;
+        }
 
-          // Wait another 100ms, then reveal terminal label text
-          setTimeout(() => {
-            if (terminalLabel) {
-              terminalLabel.classList.remove('fig1-1-hidden');
-              terminalLabel.classList.add('fig1-1-fade-in');
+        if (this.isPlaying) return;
+        this.isPlaying = true;
+        this.startTime = null;
+        this.requestRef = requestAnimationFrame((ts) => this.loop(ts));
+      },
+
+      stop() {
+        this.isPlaying = false;
+        if (this.requestRef) {
+          cancelAnimationFrame(this.requestRef);
+          this.requestRef = null;
+        }
+        if (this.timeoutRef1) clearTimeout(this.timeoutRef1);
+        if (this.timeoutRef2) clearTimeout(this.timeoutRef2);
+        if (this.timeoutRef3) clearTimeout(this.timeoutRef3);
+      },
+
+      reset() {
+        this.stop();
+        path.style.strokeDasharray = pathLength;
+        path.style.strokeDashoffset = pathLength;
+
+        pointData.forEach(pt => {
+          pt.element.classList.add('fig1-1-hidden');
+          pt.element.classList.remove('fig1-1-fade-in');
+        });
+        if (terminalPoint) {
+          terminalPoint.classList.add('fig1-1-hidden');
+          terminalPoint.classList.remove('fig1-1-fade-in');
+        }
+        if (terminalLabel) {
+          terminalLabel.classList.add('fig1-1-hidden');
+          terminalLabel.classList.remove('fig1-1-fade-in');
+        }
+      },
+
+      loop(timestamp) {
+        if (!this.isPlaying) return;
+        if (!this.startTime) {
+          this.startTime = timestamp;
+        }
+        const elapsed = timestamp - this.startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const easedProgress = 1 - Math.pow(1 - progress, 2);
+
+        path.style.strokeDashoffset = pathLength * (1 - easedProgress);
+
+        const currentLength = pathLength * easedProgress;
+        const currentPoint = path.getPointAtLength(currentLength);
+        const currentX = currentPoint.x;
+
+        pointData.forEach(pt => {
+          if (currentX >= pt.cx - 1.5) {
+            pt.element.classList.remove('fig1-1-hidden');
+            pt.element.classList.add('fig1-1-fade-in');
+          }
+        });
+
+        if (progress < 1) {
+          this.requestRef = requestAnimationFrame((ts) => this.loop(ts));
+        } else {
+          path.style.strokeDasharray = 'none';
+          path.style.strokeDashoffset = '0';
+
+          pointData.forEach(pt => {
+            pt.element.classList.remove('fig1-1-hidden');
+            pt.element.classList.add('fig1-1-fade-in');
+          });
+
+          this.timeoutRef1 = setTimeout(() => {
+            if (terminalPoint) {
+              terminalPoint.classList.remove('fig1-1-hidden');
+              terminalPoint.classList.add('fig1-1-fade-in');
             }
 
-            // Cleanup: remove temporary classes completely after animation ends
-            setTimeout(() => {
-              pointData.forEach(pt => {
-                pt.element.classList.remove('fig1-1-hidden', 'fig1-1-fade-in');
-              });
-              if (terminalPoint) terminalPoint.classList.remove('fig1-1-hidden', 'fig1-1-fade-in');
-              if (terminalLabel) terminalLabel.classList.remove('fig1-1-hidden', 'fig1-1-fade-in');
-            }, 300); // Allow transition to settle, then clear classes
+            this.timeoutRef2 = setTimeout(() => {
+              if (terminalLabel) {
+                terminalLabel.classList.remove('fig1-1-hidden');
+                terminalLabel.classList.add('fig1-1-fade-in');
+              }
 
-          }, 100);
+              // Loop reset: wait 3 seconds, then restart animation!
+              this.timeoutRef3 = setTimeout(() => {
+                this.reset();
+                this.start();
+              }, 3000);
 
-        }, 120);
+            }, 100);
+          }, 120);
+        }
       }
     };
 
-    requestAnimationFrame(draw);
+    AnimationManager.register(figure, component);
   }
 };
 
 
 /**
  * Chapter 7 — Comparison Graph Animation Engine
- * Handles drawing multi-series lines sequentially, then fading in connectors,
- * markers, and value callouts for Figure 6.12.
+ * Progressive baseline and accent line draws, staggered connectors, markers, and labels.
+ * Loops while visible and cleans up completely offscreen.
  */
 const ComparisonGraphEngine = {
   init(figureId) {
@@ -1161,115 +1434,130 @@ const ComparisonGraphEngine = {
 
     if (!baselinePath || !accentPath) return;
 
-    // Check for prefers-reduced-motion
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) {
-      baselinePath.style.strokeDasharray = 'none';
-      baselinePath.style.strokeDashoffset = '0';
-      accentPath.style.strokeDasharray = 'none';
-      accentPath.style.strokeDashoffset = '0';
-      markers.forEach(el => el.style.opacity = '1');
-      labels.forEach(el => el.style.opacity = '1');
-      return;
-    }
-
-    // Measure path lengths
     const baselineLength = baselinePath.getTotalLength();
     const accentLength = accentPath.getTotalLength();
 
-    // Set initial offsets (temporarily make baseline solid for progressive draw)
-    baselinePath.style.strokeDasharray = `${baselineLength} ${baselineLength}`;
-    baselinePath.style.strokeDashoffset = baselineLength;
+    const component = {
+      requestRef: null,
+      timeoutRef1: null,
+      timeoutRef2: null,
+      timeoutRef3: null,
+      timeoutRef4: null,
+      isPlaying: false,
+      startTime: null,
+      baselineDuration: 1200,
+      accentDuration: 1200,
 
-    accentPath.style.strokeDasharray = `${accentLength} ${accentLength}`;
-    accentPath.style.strokeDashoffset = accentLength;
+      start() {
+        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        if (prefersReducedMotion) {
+          baselinePath.style.strokeDasharray = 'none';
+          baselinePath.style.strokeDashoffset = '0';
+          accentPath.style.strokeDasharray = 'none';
+          accentPath.style.strokeDashoffset = '0';
+          markers.forEach(el => el.style.opacity = '1');
+          labels.forEach(el => el.style.opacity = '1');
+          return;
+        }
 
-    // Hide markers and labels
-    markers.forEach(el => {
-      el.style.opacity = '0';
-      el.style.transition = 'opacity 0.4s ease';
-    });
-    labels.forEach(el => {
-      el.style.opacity = '0';
-      el.style.transition = 'opacity 0.4s ease';
-    });
+        if (this.isPlaying) return;
+        this.isPlaying = true;
+        this.startTime = null;
+        this.requestRef = requestAnimationFrame((ts) => this.loopBaseline(ts));
+      },
 
-    let hasAnimated = false;
+      stop() {
+        this.isPlaying = false;
+        if (this.requestRef) {
+          cancelAnimationFrame(this.requestRef);
+          this.requestRef = null;
+        }
+        if (this.timeoutRef1) clearTimeout(this.timeoutRef1);
+        if (this.timeoutRef2) clearTimeout(this.timeoutRef2);
+        if (this.timeoutRef3) clearTimeout(this.timeoutRef3);
+        if (this.timeoutRef4) clearTimeout(this.timeoutRef4);
+      },
 
-    const observer = new IntersectionObserver((entries) => {
-      if (entries[0].isIntersecting && !hasAnimated) {
-        hasAnimated = true;
-        observer.disconnect();
+      reset() {
+        this.stop();
+        baselinePath.style.strokeDasharray = `${baselineLength} ${baselineLength}`;
+        baselinePath.style.strokeDashoffset = baselineLength;
 
-        this.animate(baselinePath, baselineLength, accentPath, accentLength, markers, labels);
-      }
-    }, { threshold: 0.1 });
+        accentPath.style.strokeDasharray = `${accentLength} ${accentLength}`;
+        accentPath.style.strokeDashoffset = accentLength;
 
-    observer.observe(figure);
-  },
+        markers.forEach(el => el.style.opacity = '0');
+        labels.forEach(el => el.style.opacity = '0');
+      },
 
-  animate(baselinePath, baselineLength, accentPath, accentLength, markers, labels) {
-    const baselineDuration = 1200;
-    const startTime = performance.now();
+      loopBaseline(timestamp) {
+        if (!this.isPlaying) return;
+        if (!this.startTime) {
+          this.startTime = timestamp;
+        }
+        const elapsed = timestamp - this.startTime;
+        const progress = Math.min(elapsed / this.baselineDuration, 1);
+        const easedProgress = 1 - Math.pow(1 - progress, 3); // cubic ease-out
 
-    const drawBaseline = (now) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / baselineDuration, 1);
-      const easedProgress = 1 - Math.pow(1 - progress, 3); // cubic ease-out
+        baselinePath.style.strokeDashoffset = baselineLength * (1 - easedProgress);
 
-      baselinePath.style.strokeDashoffset = baselineLength * (1 - easedProgress);
+        if (progress < 1) {
+          this.requestRef = requestAnimationFrame((ts) => this.loopBaseline(ts));
+        } else {
+          baselinePath.style.strokeDasharray = '4 4';
+          baselinePath.style.strokeDashoffset = '0';
 
-      if (progress < 1) {
-        requestAnimationFrame(drawBaseline);
-      } else {
-        // Restore dashed style
-        baselinePath.style.strokeDasharray = '4 4';
-        baselinePath.style.strokeDashoffset = '0';
+          this.timeoutRef1 = setTimeout(() => {
+            this.startTime = null; // reset clock for next animation segment
+            this.requestRef = requestAnimationFrame((ts) => this.loopAccent(ts));
+          }, 300);
+        }
+      },
 
-        // Stage 2: Pause 300ms, then draw Neuro-Informed Study
-        setTimeout(() => {
-          const accentStartTime = performance.now();
-          const accentDuration = 1200;
+      loopAccent(timestamp) {
+        if (!this.isPlaying) return;
+        if (!this.startTime) {
+          this.startTime = timestamp;
+        }
+        const elapsed = timestamp - this.startTime;
+        const progress = Math.min(elapsed / this.accentDuration, 1);
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
 
-          const drawAccent = (accentNow) => {
-            const accentElapsed = accentNow - accentStartTime;
-            const accentProgress = Math.min(accentElapsed / accentDuration, 1);
-            const accentEasedProgress = 1 - Math.pow(1 - accentProgress, 3);
+        accentPath.style.strokeDashoffset = accentLength * (1 - easedProgress);
 
-            accentPath.style.strokeDashoffset = accentLength * (1 - accentEasedProgress);
+        if (progress < 1) {
+          this.requestRef = requestAnimationFrame((ts) => this.loopAccent(ts));
+        } else {
+          accentPath.style.strokeDasharray = 'none';
+          accentPath.style.strokeDashoffset = '0';
 
-            if (accentProgress < 1) {
-              requestAnimationFrame(drawAccent);
-            } else {
-              accentPath.style.strokeDasharray = 'none';
-              accentPath.style.strokeDashoffset = '0';
+          this.timeoutRef2 = setTimeout(() => {
+            markers.forEach(el => el.style.opacity = '1');
 
-              // Stage 3: Pause 200ms, then fade in vertical comparison connector and markers
-              setTimeout(() => {
-                markers.forEach(el => el.style.opacity = '1');
+            this.timeoutRef3 = setTimeout(() => {
+              labels.forEach(el => el.style.opacity = '1');
 
-                // Stage 4: Pause 200ms, then fade in callout labels
-                setTimeout(() => {
-                  labels.forEach(el => el.style.opacity = '1');
-                }, 200);
+              // Loop reset: wait 3 seconds, then restart comparison!
+              this.timeoutRef4 = setTimeout(() => {
+                this.reset();
+                this.start();
+              }, 3000);
 
-              }, 200);
-            }
-          };
-
-          requestAnimationFrame(drawAccent);
-        }, 300);
+            }, 200);
+          }, 200);
+        }
       }
     };
 
-    requestAnimationFrame(drawBaseline);
+    AnimationManager.register(figure, component);
   }
 };
 
 
 /**
  * Chapter 8 — Learning Journey Timeline Engine
- * Animates the horizontal process flow steps based on scroll progress of Chapter 1.
+ * Animates the horizontal process flow steps based on scroll progress.
+ * Attaches scroll/resize listeners only when visible and cleans them up offscreen.
  */
 const TimelineEngine = {
   init() {
@@ -1285,10 +1573,9 @@ const TimelineEngine = {
       const flowHeight = rect.height;
       const windowHeight = window.innerHeight;
 
-      // Animation starts when element top enters the bottom 75% of viewport
-      const startScroll = flowTop - windowHeight * 0.75;
-      // Animation ends when element bottom enters the top 25% of viewport
-      const endScroll = flowTop + flowHeight - windowHeight * 0.25;
+      // Expanded vertical range to reduce scroll sensitivity and give more reading time per milestone
+      const startScroll = flowTop - windowHeight * 0.95;
+      const endScroll = flowTop + flowHeight - windowHeight * 0.05;
       const scrollDist = endScroll - startScroll;
       if (scrollDist <= 0) return;
 
@@ -1296,7 +1583,6 @@ const TimelineEngine = {
       let progress = (scrollY - startScroll) / scrollDist;
       progress = Math.max(0, Math.min(1, progress));
 
-      // Calculate active step index (0 to 5)
       const activeIndex = Math.min(steps.length - 1, Math.floor(progress * steps.length));
 
       steps.forEach((step, idx) => {
@@ -1312,12 +1598,33 @@ const TimelineEngine = {
       });
     };
 
-    // Run on scroll
-    window.addEventListener('scroll', updateTimeline, { passive: true });
-    // Run on resize
-    window.addEventListener('resize', updateTimeline, { passive: true });
-    // Run once initially
-    updateTimeline();
+    const component = {
+      isPlaying: false,
+
+      start() {
+        if (this.isPlaying) return;
+        this.isPlaying = true;
+        window.addEventListener('scroll', updateTimeline, { passive: true });
+        window.addEventListener('resize', updateTimeline, { passive: true });
+        updateTimeline();
+      },
+
+      stop() {
+        if (!this.isPlaying) return;
+        this.isPlaying = false;
+        window.removeEventListener('scroll', updateTimeline);
+        window.removeEventListener('resize', updateTimeline);
+      },
+
+      reset() {
+        this.stop();
+        steps.forEach(step => {
+          step.classList.remove('process-step--active', 'process-step--completed');
+        });
+      }
+    };
+
+    AnimationManager.register(flow, component);
   }
 };
 
@@ -1325,6 +1632,7 @@ const TimelineEngine = {
 /**
  * Chapter 9 — Progress Roadmap Engine
  * Animates the vertical and horizontal growth roadmap based on scroll progress.
+ * Listens to scroll/resize events only when visible.
  */
 const RoadmapEngine = {
   init(figureId) {
@@ -1339,7 +1647,6 @@ const RoadmapEngine = {
     const pipelineStates = Array.from(pipeline.querySelectorAll('.pipeline-state'));
     if (!nodes.length || !pipelineStates.length) return;
 
-    // Inject the progress bar overlay and travelling glow dot dynamically
     const bar = document.createElement('div');
     bar.className = 'roadmap-progress-bar';
     journey.appendChild(bar);
@@ -1348,7 +1655,6 @@ const RoadmapEngine = {
     glow.className = 'roadmap-glow-dot';
     journey.appendChild(glow);
 
-    // Calculate Y coordinates of the milestone bullets relative to journey container
     const calculateBulletPositions = () => {
       return nodes.map(node => {
         const bullet = node.querySelector('div');
@@ -1361,7 +1667,6 @@ const RoadmapEngine = {
     let endY = bulletPositions[bulletPositions.length - 1];
     let totalLineHeight = endY - startY;
 
-    // Position progress bar overlay statically
     bar.style.top = `${startY}px`;
     bar.style.height = `${totalLineHeight}px`;
 
@@ -1384,25 +1689,21 @@ const RoadmapEngine = {
       const rect = journey.getBoundingClientRect();
       const journeyTop = rect.top + window.scrollY;
 
-      // Calculate progress when viewport center moves from startY to endY of the vertical line
       const viewportCenter = window.scrollY + window.innerHeight / 2;
       let progress = (viewportCenter - (journeyTop + startY)) / totalLineHeight;
       progress = Math.max(0, Math.min(1, progress));
 
       const currentY = startY + progress * totalLineHeight;
 
-      // Scale the progress line and position the glow dot
       bar.style.transform = `scaleY(${progress})`;
       glow.style.top = `${currentY}px`;
 
-      // Show/hide glow dot at the boundaries to prevent overflow rendering
       if (progress > 0.01 && progress < 0.99) {
         glow.classList.add('roadmap-glow--active');
       } else {
         glow.classList.remove('roadmap-glow--active');
       }
 
-      // Proximity-based active index calculation
       let activeIndex = 0;
       let minDiff = Infinity;
       bulletPositions.forEach((y, idx) => {
@@ -1413,7 +1714,6 @@ const RoadmapEngine = {
         }
       });
 
-      // Synchronously toggle active states on vertical milestones
       nodes.forEach((node, idx) => {
         if (idx === activeIndex) {
           node.classList.add('roadmap-node--active');
@@ -1422,7 +1722,6 @@ const RoadmapEngine = {
         }
       });
 
-      // Synchronously toggle active states on horizontal pipeline items
       pipelineStates.forEach((state, idx) => {
         if (idx === activeIndex) {
           state.classList.add('pipeline-state--active');
@@ -1432,9 +1731,7 @@ const RoadmapEngine = {
       });
     };
 
-    // Listen to window scroll and resize events
-    window.addEventListener('scroll', updateRoadmap, { passive: true });
-    window.addEventListener('resize', () => {
+    const handleResize = () => {
       bulletPositions = calculateBulletPositions();
       startY = bulletPositions[0];
       endY = bulletPositions[bulletPositions.length - 1];
@@ -1442,10 +1739,37 @@ const RoadmapEngine = {
       bar.style.top = `${startY}px`;
       bar.style.height = `${totalLineHeight}px`;
       updateRoadmap();
-    }, { passive: true });
+    };
 
-    // Run once initially
-    updateRoadmap();
+    const component = {
+      isPlaying: false,
+
+      start() {
+        if (this.isPlaying) return;
+        this.isPlaying = true;
+        window.addEventListener('scroll', updateRoadmap, { passive: true });
+        window.addEventListener('resize', handleResize, { passive: true });
+        updateRoadmap();
+      },
+
+      stop() {
+        if (!this.isPlaying) return;
+        this.isPlaying = false;
+        window.removeEventListener('scroll', updateRoadmap);
+        window.removeEventListener('resize', handleResize);
+      },
+
+      reset() {
+        this.stop();
+        bar.style.transform = 'scaleY(0)';
+        glow.style.top = `${startY}px`;
+        glow.classList.remove('roadmap-glow--active');
+        nodes.forEach(n => n.classList.remove('roadmap-node--active'));
+        pipelineStates.forEach(s => s.classList.remove('pipeline-state--active'));
+      }
+    };
+
+    AnimationManager.register(container, component);
   }
 };
 

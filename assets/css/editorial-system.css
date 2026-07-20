@@ -1426,7 +1426,7 @@ p + p { margin-top: var(--sp-4); }
 .process-step + .process-step::before {
   content: '';
   position: absolute;
-  top: 16px;
+  top: 18px;
   right: 50%;
   width: 100%;
   height: var(--bw);
@@ -1435,8 +1435,8 @@ p + p { margin-top: var(--sp-4); }
 }
 
 .process-step__node {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background-color: var(--c-surface);
   border: var(--bw) solid var(--c-border);
@@ -1449,7 +1449,7 @@ p + p { margin-top: var(--sp-4); }
 
 .process-step__node-num {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 500;
   color: var(--c-text-3);
 }
@@ -2421,7 +2421,7 @@ p + p { margin-top: var(--sp-4); }
   .process-step + .process-step::before {
     top: -28px;
     right: auto;
-    left: 15px;
+    left: 17px;
     width: var(--bw);
     height: 28px;
   }

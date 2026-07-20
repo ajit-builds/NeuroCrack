@@ -1331,35 +1331,12 @@ table {
   display: flex;
   flex-direction: column;
   gap: var(--sp-3);
-  opacity: 0;
-  transform: translateY(6px);
+  opacity: 1;
 }
 
 /* NeuroCrack target accent - static thin neon green border, no shadows */
 .srm-card--target {
   border: 1px solid var(--c-accent);
-}
-
-.chart-revealed .srm-card {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Card Reveal Animations (Phase 1 & 8) */
-.chart-revealed .srm-card:nth-child(1) {
-  animation: srm-card-reveal 500ms ease-out 0ms 1 normal both;
-}
-
-.chart-revealed .srm-card:nth-child(2) {
-  animation: srm-card-reveal 500ms ease-out 2850ms 1 normal both;
-}
-
-.chart-revealed .srm-card:nth-child(3) {
-  animation: srm-card-reveal 500ms ease-out 5700ms 1 normal both;
-}
-
-.chart-revealed .srm-card:nth-child(4) {
-  animation: srm-card-reveal 500ms ease-out 8550ms 1 normal both;
 }
 
 /* Waffle Matrix Layout */
@@ -1369,104 +1346,9 @@ table {
   aspect-ratio: 1 / 1;
 }
 
-.srm-matrix--bg {
-  width: 100%;
-  height: 100%;
-}
-
-.srm-matrix--fg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-}
-
-.srm-matrix--fg .srm-cell--empty {
-  border-color: transparent !important;
-}
-
-/* Staggered Active Cell Animations */
-.chart-revealed .srm-cell--rev,
-.chart-revealed .srm-cell--sub {
-  animation: srm-cell-reveal 150ms ease-out both;
-}
-
-/* Base style for stat entries */
+/* Base style for stat entries - fully visible immediately */
 .srm-stat {
-  opacity: 0;
-  transform: translateY(4px);
-}
-
-/* Subscriber Value Reveal (Phase 5) Delays */
-.chart-revealed .srm-card:nth-child(1) .srm-stat:nth-child(1) {
-  animation: srm-stat-reveal 250ms ease-out 2000ms 1 normal both;
-}
-
-.chart-revealed .srm-card:nth-child(2) .srm-stat:nth-child(1) {
-  animation: srm-stat-reveal 250ms ease-out 4850ms 1 normal both;
-}
-
-.chart-revealed .srm-card:nth-child(3) .srm-stat:nth-child(1) {
-  animation: srm-stat-reveal 250ms ease-out 7700ms 1 normal both;
-}
-
-.chart-revealed .srm-card:nth-child(4) .srm-stat:nth-child(1) {
-  animation: srm-stat-reveal 250ms ease-out 10550ms 1 normal both;
-}
-
-/* Revenue Value Reveal (Phase 6) Delays */
-.chart-revealed .srm-card:nth-child(1) .srm-stat:nth-child(2) {
-  animation: srm-stat-reveal 250ms ease-out 2350ms 1 normal both;
-}
-
-.chart-revealed .srm-card:nth-child(2) .srm-stat:nth-child(2) {
-  animation: srm-stat-reveal 250ms ease-out 5200ms 1 normal both;
-}
-
-.chart-revealed .srm-card:nth-child(3) .srm-stat:nth-child(2) {
-  animation: srm-stat-reveal 250ms ease-out 8050ms 1 normal both;
-}
-
-.chart-revealed .srm-card:nth-child(4) .srm-stat:nth-child(2) {
-  animation: srm-stat-reveal 250ms ease-out 10900ms 1 normal both;
-}
-
-/* Keyframes */
-@keyframes srm-card-reveal {
-  0% {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes srm-cell-reveal {
-  0% {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-@keyframes srm-stat-reveal {
-  0% {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-
-  100% {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  opacity: 1;
 }
 
 /* NeuroCrack target highlight sweep (Phase 9) */
@@ -1487,7 +1369,7 @@ table {
       rgba(255, 255, 255, 0.7) 50%,
       rgba(255, 255, 255, 0) 100%);
   transform: skewX(-20deg);
-  animation: highlight-sweep-bg 1s ease-in-out 11.15s 1 normal forwards;
+  animation: highlight-sweep-bg 1s ease-in-out 3s 1 normal forwards;
 }
 
 .chart-revealed .srm-card--target .srm-card__name--target,
@@ -1501,7 +1383,7 @@ table {
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: highlight-sweep-text 1.2s ease-in-out 11.15s 1 normal forwards;
+  animation: highlight-sweep-text 1.2s ease-in-out 3s 1 normal forwards;
 }
 
 @keyframes highlight-sweep-bg {
@@ -1610,14 +1492,24 @@ table {
 .srm-cell {
   border-radius: 1px;
   aspect-ratio: 1 / 1;
+  transition: opacity 120ms ease-out, transform 120ms ease-out, background-color 120ms ease-out, border-color 120ms ease-out;
+  will-change: opacity, transform, background-color, border-color;
 }
 
-/* Revenue cell — white fill (static) */
-.srm-cell--rev {
-  background-color: var(--c-text-1);
+/* Hidden cell state */
+.srm-cell--hidden {
   opacity: 0;
   transform: scale(0.95);
-  will-change: transform, opacity;
+  background-color: transparent;
+  border: 1px solid transparent;
+}
+
+/* Revenue cell — white fill */
+.srm-cell--rev {
+  background-color: var(--c-text-1);
+  border: 1px solid transparent;
+  opacity: 1;
+  transform: scale(1);
 }
 
 /* Target company — accent color instead of white */
@@ -1630,16 +1522,16 @@ table {
   background-color: transparent;
   border: 1px solid rgba(250, 250, 250, 0.45);
   /* hollow outline with higher contrast */
-  opacity: 0;
-  transform: scale(0.95);
-  will-change: transform, opacity;
+  opacity: 1;
+  transform: scale(1);
 }
 
 /* Empty / inactive cell — barely visible */
 .srm-cell--empty {
   background-color: transparent;
   border: 1px solid rgba(250, 250, 250, 0.015);
-  /* reduced opacity to minimize visual noise */
+  opacity: 1;
+  transform: scale(1);
 }
 
 /* ── Metrics row ─────────────────────────────────────────────────── */
