@@ -1474,13 +1474,8 @@ table {
   flex-shrink: 0;
 }
 
-/* ── 40×40 Matrix ───────────────────────────────────────────────── */
 .srm-matrix {
-  display: grid;
-  grid-template-columns: repeat(40, 1fr);
-  grid-auto-rows: 1fr;
-  /* rows equal column width → square cells */
-  gap: 1px;
+  display: block;
   width: 100%;
   aspect-ratio: 1 / 1;
   /* container is a perfect square */

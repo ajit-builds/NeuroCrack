@@ -422,7 +422,7 @@ const ScrollToTop = {
  *    Each cell represents one proportional unit:
  *      • 1 solid filled cell = ₹1 Cr of Annual Revenue
  *      • 1 hollow outlined cell = 1K Subscribers
- *    Both metrics exist inside the SAME matrix sequentially.
+ *    Both metrics exist inside the SAME matrix.
  */
 const SubscriberRevenueMatrix = {
 
@@ -445,7 +445,8 @@ const SubscriberRevenueMatrix = {
     observer: null,
     durationPhase1: 1500, // Construction phase (1.5s)
     durationPhase2: 1500, // Revenue Fill phase (1.5s)
-    durationPhase3: 2000, // Reading Pause phase (2.0s)
+    durationPhase3: 1200, // Reading Pause phase (1.2s)
+    durationPhase4: 800,  // Soft reset / clearing wave (0.8s)
     totalDuration: 5000   // Total loop (5.0s)
   },
 
@@ -453,6 +454,11 @@ const SubscriberRevenueMatrix = {
   init() {
     const container = document.getElementById('srm-container');
     if (!container) return;
+
+    // Retrieve styles dynamically to respect theme CSS variables
+    const styles = getComputedStyle(document.documentElement);
+    this.colorAccent = styles.getPropertyValue('--c-accent').trim() || '#D8FF3E';
+    this.colorText1 = styles.getPropertyValue('--c-text-1').trim() || '#FAFAFA';
 
     // Reset container to avoid duplication
     container.innerHTML = '';
@@ -466,106 +472,13 @@ const SubscriberRevenueMatrix = {
 
     // Set up IntersectionObserver to trigger and pause animation based on viewport visibility
     this._initObserver();
-  },
 
-  /* ── Build one company card ─────────────────────────────────────── */
-  _buildCard(company, subCells, revCells, index) {
-    const card = document.createElement('div');
-    card.className = 'srm-card' + (company.isTarget ? ' srm-card--target' : '');
-
-    /* Company name row */
-    const nameRow = document.createElement('p');
-    nameRow.className = 'srm-card__name' + (company.isTarget ? ' srm-card__name--target' : '');
-    nameRow.textContent = company.name;
-    if (company.isTarget) {
-      const badge = document.createElement('span');
-      badge.className = 'srm-card__badge';
-      badge.textContent = 'TARGET';
-      nameRow.appendChild(badge);
-    }
-
-    /* Matrix Container */
-    const container = document.createElement('div');
-    container.className = 'srm-matrix-container';
-
-    /* Single Matrix Grid Layer */
-    const matrix = document.createElement('div');
-    matrix.className = 'srm-matrix';
-
-    const totalActive = revCells + subCells;
-    company.activeCells = [];
-    company.cellStates = []; // Tracks actual state of active cells ('hidden', 'sub', 'rev')
-    company.currentCount = -1;
-    company.currentFilled = -1;
-    company.currentCleared = -1;
-    company.lastTargetCount = 0;
-    company.lastTargetFilled = 0;
-    company.lastTargetCleared = 0;
-    company.lastElapsed = 0;
-
-    // Precompute diagonal indices for Phase 1 construction
-    const cols = this.GRID_COLS;
-    company.diagonalIndices = Array.from({length: totalActive}, (_, i) => i);
-    company.diagonalIndices.sort((a, b) => {
-      const colA = a % cols;
-      const rowA = Math.floor(a / cols);
-      const colB = b % cols;
-      const rowB = Math.floor(b / cols);
-      const diagA = colA + rowA;
-      const diagB = colB + rowB;
-      if (diagA !== diagB) return diagA - diagB;
-      return colA - colB; // Left-to-right flow break to make diagonal reveal look organic and smooth
-    });
-
-    for (let i = 0; i < this.TOTAL_CELLS; i++) {
-      const cell = document.createElement('div');
-      if (i < totalActive) {
-        // Active cell (part of the subscriber capacity or revenue)
-        cell.className = 'srm-cell srm-cell--hidden';
-        company.activeCells.push(cell);
-        company.cellStates.push('hidden');
-      } else {
-        // Inactive background cell
-        cell.className = 'srm-cell srm-cell--empty';
-      }
-      matrix.appendChild(cell);
-    }
-
-    container.appendChild(matrix);
-
-    /* Labels / Metrics below the matrix */
-    const meta = document.createElement('div');
-    meta.className = 'srm-meta';
-
-    // Subscribers value
-    const subLabel = company.subscribers >= 1000000 ? (company.subscribers / 1000000).toFixed(1) + 'M' : (company.subscribers / 1000) + 'K';
-    const subStat = this._buildStat('Subscribers', subLabel, company.isTarget);
-
-    // Revenue value
-    const revLabel = `₹${company.revenue} Cr`;
-    const revStat = this._buildStat('Revenue', revLabel, company.isTarget);
-
-    meta.appendChild(subStat);
-    meta.appendChild(revStat);
-
-    card.appendChild(nameRow);
-    card.appendChild(container);
-    card.appendChild(meta);
-    return card;
-  },
-
-  _buildStat(label, value, isTarget) {
-    const wrap = document.createElement('div');
-    wrap.className = 'srm-stat';
-    const lbl = document.createElement('span');
-    lbl.className = 'srm-stat__label';
-    lbl.textContent = label;
-    const val = document.createElement('span');
-    val.className = 'srm-stat__value' + (isTarget ? ' srm-stat__value--target' : '');
-    val.textContent = value;
-    wrap.appendChild(lbl);
-    wrap.appendChild(val);
-    return wrap;
+    // Set up window resize listener to keep canvas rendering crisp and correctly sized
+    window.addEventListener('resize', () => {
+      this.data.forEach(company => {
+        this._drawCanvas(company);
+      });
+    }, { passive: true });
   },
 
   /* ── Viewport Intersection Observer ────────────────────────────── */
@@ -611,14 +524,15 @@ const SubscriberRevenueMatrix = {
       company.lastTargetCleared = 0;
       company.lastElapsed = 0;
 
-      if (company.activeCells) {
-        const cells = company.activeCells;
-        const totalActive = cells.length;
-        for (let i = 0; i < totalActive; i++) {
-          cells[i].className = 'srm-cell srm-cell--hidden';
-          company.cellStates[i] = 'hidden';
-        }
+      if (company.canvasCells) {
+        company.canvasCells.forEach(cell => {
+          cell.opacity = 0;
+          cell.scale = 0.95;
+          cell.fillProgress = 0;
+        });
       }
+
+      this._drawCanvas(company);
     });
   },
 
@@ -640,8 +554,213 @@ const SubscriberRevenueMatrix = {
     this.anim.requestRef = requestAnimationFrame((ts) => this._loop(ts));
   },
 
+  /* ── Build one company card ─────────────────────────────────────── */
+  _buildCard(company, subCells, revCells, index) {
+    const card = document.createElement('div');
+    card.className = 'srm-card' + (company.isTarget ? ' srm-card--target' : '');
+
+    /* Company name row */
+    const nameRow = document.createElement('p');
+    nameRow.className = 'srm-card__name' + (company.isTarget ? ' srm-card__name--target' : '');
+    nameRow.textContent = company.name;
+    if (company.isTarget) {
+      const badge = document.createElement('span');
+      badge.className = 'srm-card__badge';
+      badge.textContent = 'TARGET';
+      nameRow.appendChild(badge);
+    }
+
+    /* Matrix Container */
+    const container = document.createElement('div');
+    container.className = 'srm-matrix-container';
+
+    /* Single Matrix Canvas Layer */
+    const matrix = document.createElement('div');
+    matrix.className = 'srm-matrix';
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 799;
+    canvas.height = 799;
+    canvas.style.width = '100%';
+    canvas.style.height = '100%';
+    canvas.style.display = 'block';
+    canvas.style.borderRadius = '3px';
+    matrix.appendChild(canvas);
+
+    company.canvas = canvas;
+    company.ctx = canvas.getContext('2d');
+
+    const totalActive = revCells + subCells;
+    company.activeCellsCount = totalActive;
+    company.revenue = revCells;
+    company.currentCount = -1;
+    company.currentFilled = -1;
+    company.currentCleared = -1;
+    company.lastTargetCount = 0;
+    company.lastTargetFilled = 0;
+    company.lastTargetCleared = 0;
+    company.lastElapsed = 0;
+
+    // Precompute diagonal indices and ranks
+    const cols = this.GRID_COLS;
+    company.diagonalIndices = Array.from({length: totalActive}, (_, i) => i);
+    company.diagonalIndices.sort((a, b) => {
+      const colA = a % cols;
+      const rowA = Math.floor(a / cols);
+      const colB = b % cols;
+      const rowB = Math.floor(b / cols);
+      const diagA = colA + rowA;
+      const diagB = colB + rowB;
+      if (diagA !== diagB) return diagA - diagB;
+      return colA - colB;
+    });
+
+    company.diagonalRanks = new Int32Array(totalActive);
+    for (let idx = 0; idx < totalActive; idx++) {
+      const cellIndex = company.diagonalIndices[idx];
+      company.diagonalRanks[cellIndex] = idx;
+    }
+
+    // Initialize animation values for active cells
+    company.canvasCells = [];
+    for (let i = 0; i < totalActive; i++) {
+      company.canvasCells.push({
+        opacity: 0,
+        scale: 0.95,
+        fillProgress: 0
+      });
+    }
+
+    container.appendChild(matrix);
+
+    /* Labels / Metrics below the matrix */
+    const meta = document.createElement('div');
+    meta.className = 'srm-meta';
+
+    // Subscribers value
+    const subLabel = company.subscribers >= 1000000 ? (company.subscribers / 1000000).toFixed(1) + 'M' : (company.subscribers / 1000) + 'K';
+    const subStat = this._buildStat('Subscribers', subLabel, company.isTarget);
+
+    // Revenue value
+    const revLabel = `₹${company.revenue} Cr`;
+    const revStat = this._buildStat('Revenue', revLabel, company.isTarget);
+
+    meta.appendChild(subStat);
+    meta.appendChild(revStat);
+
+    card.appendChild(nameRow);
+    card.appendChild(container);
+    card.appendChild(meta);
+
+    // Draw the initial clean canvas grid
+    this._drawCanvas(company);
+
+    return card;
+  },
+
+  _buildStat(label, value, isTarget) {
+    const wrap = document.createElement('div');
+    wrap.className = 'srm-stat';
+    const lbl = document.createElement('span');
+    lbl.className = 'srm-stat__label';
+    lbl.textContent = label;
+    const val = document.createElement('span');
+    val.className = 'srm-stat__value' + (isTarget ? ' srm-stat__value--target' : '');
+    val.textContent = value;
+    wrap.appendChild(lbl);
+    wrap.appendChild(val);
+    return wrap;
+  },
+
+  _drawCanvas(company) {
+    const canvas = company.canvas;
+    const ctx = company.ctx;
+    if (!canvas || !ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    const W = rect.width;
+    const H = rect.height;
+
+    // Dynamically scale canvas coordinates to match screen physical pixels (perfect Retina rendering)
+    const targetWidth = Math.round(W * dpr);
+    const targetHeight = Math.round(H * dpr);
+    if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+    }
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    const cols = this.GRID_COLS;
+    const totalActive = company.activeCellsCount;
+    const fillStyleColor = company.isTarget ? this.colorAccent : this.colorText1;
+
+    // Precalculate physical pixel boundaries for columns and rows to ensure perfect grid snapping
+    const cellLayouts = new Float32Array(40 * 3); // left, top, size
+    const availableWidth = W - 39; // W minus 39 gaps of 1px
+    const gapPhysical = Math.round(dpr); // 1 CSS pixel gap in physical pixels
+
+    for (let i = 0; i < 40; i++) {
+      const pLeft = Math.round(i * availableWidth / 40 * dpr) + i * gapPhysical;
+      const pRight = Math.round((i + 1) * availableWidth / 40 * dpr) + i * gapPhysical;
+      cellLayouts[i * 3] = pLeft;
+      cellLayouts[i * 3 + 1] = pRight - pLeft; // width
+    }
+
+    for (let i = 0; i < this.TOTAL_CELLS; i++) {
+      const col = i % cols;
+      const row = Math.floor(i / cols);
+
+      const pX = cellLayouts[col * 3];
+      const pW = cellLayouts[col * 3 + 1];
+      const pY = cellLayouts[row * 3];
+      const pH = cellLayouts[row * 3 + 1];
+
+      if (i < totalActive) {
+        const cell = company.canvasCells[i];
+        if (cell.opacity > 0.005) {
+          if (Math.abs(cell.scale - 1.0) < 0.005) {
+            // Highly optimized non-transform path
+            ctx.strokeStyle = `rgba(250, 250, 250, ${0.45 * cell.opacity})`;
+            ctx.lineWidth = 1;
+            ctx.strokeRect(pX + 0.5, pY + 0.5, pW - 1, pH - 1);
+
+            if (cell.fillProgress > 0.005) {
+              ctx.fillStyle = fillStyleColor;
+              ctx.globalAlpha = cell.opacity * cell.fillProgress;
+              ctx.fillRect(pX, pY, pW, pH);
+              ctx.globalAlpha = 1.0;
+            }
+          } else {
+            // Scaling transform path
+            ctx.save();
+            ctx.translate(pX + pW / 2, pY + pH / 2);
+            ctx.scale(cell.scale, cell.scale);
+
+            ctx.strokeStyle = `rgba(250, 250, 250, ${0.45 * cell.opacity})`;
+            ctx.lineWidth = 1;
+            ctx.strokeRect(-pW / 2 + 0.5, -pH / 2 + 0.5, pW - 1, pH - 1);
+
+            if (cell.fillProgress > 0.005) {
+              ctx.fillStyle = fillStyleColor;
+              ctx.globalAlpha = cell.opacity * cell.fillProgress;
+              ctx.fillRect(-pW / 2, -pH / 2, pW, pH);
+            }
+            ctx.restore();
+          }
+        }
+      } else {
+        // Inactive background cell
+        ctx.strokeStyle = 'rgba(250, 250, 250, 0.015)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(pX + 0.5, pY + 0.5, pW - 1, pH - 1);
+      }
+    }
+  },
+
   _updateGrid(company, elapsed) {
-    const totalActive = company.activeCells.length;
+    const totalActive = company.activeCellsCount;
     const revCells = company.revenue;
 
     let targetCount = 0;
@@ -650,22 +769,21 @@ const SubscriberRevenueMatrix = {
 
     const p1 = this.anim.durationPhase1; // 1500
     const p2 = this.anim.durationPhase2; // 1500
-    const p3 = 1200; // Pause duration (1.2s)
-    const p4 = 800;  // Soft reset / clearing wave duration (0.8s)
+    const p3 = this.anim.durationPhase3; // 1200
+    const p4 = this.anim.durationPhase4; // 800
 
     // Detect loop wrap-around reset
     if (elapsed < company.lastElapsed) {
-      company.lastTargetCount = 0;
-      company.lastTargetFilled = 0;
-      company.lastTargetCleared = 0;
+      company.currentCount = -1;
+      company.currentFilled = -1;
+      company.currentCleared = -1;
 
-      // Force synchronous reset of all cells to hidden/initial state to prevent any remaining cells from previous cycle
-      const cells = company.activeCells;
-      const totalActive = cells.length;
-      for (let i = 0; i < totalActive; i++) {
-        cells[i].className = 'srm-cell srm-cell--hidden';
-        company.cellStates[i] = 'hidden';
-      }
+      // Force synchronous reset of all active cells to initial hidden state
+      company.canvasCells.forEach(cell => {
+        cell.opacity = 0;
+        cell.scale = 0.95;
+        cell.fillProgress = 0;
+      });
     }
     company.lastElapsed = elapsed;
 
@@ -694,88 +812,64 @@ const SubscriberRevenueMatrix = {
       targetCleared = Math.floor(progress * totalActive);
     }
 
-    // Only update elements when values change (extremely performant $O(\Delta)$ updates)
+    // Update target state for each active cell and run transitions
+    let needsRedraw = false;
+    for (let i = 0; i < totalActive; i++) {
+      let targetOpacity = 0;
+      let targetScale = 0.95;
+      let targetFillProgress = 0;
+
+      if (elapsed < p1) {
+        const diagIdx = company.diagonalRanks[i];
+        if (diagIdx < targetCount) {
+          targetOpacity = 1;
+          targetScale = 1.0;
+        }
+      } else if (elapsed < p1 + p2 + p3) {
+        targetOpacity = 1;
+        targetScale = 1.0;
+        if (i < targetFilled) {
+          targetFillProgress = 1;
+        }
+      } else {
+        const diagIdx = company.diagonalRanks[i];
+        if (diagIdx >= targetCleared) {
+          targetOpacity = 1;
+          targetScale = 1.0;
+          if (i < revCells) {
+            targetFillProgress = 1;
+          }
+        }
+      }
+
+      const cell = company.canvasCells[i];
+      const prevOpacity = cell.opacity;
+      const prevScale = cell.scale;
+      const prevFill = cell.fillProgress;
+
+      // Smooth interpolation using simple exponential decay
+      cell.opacity += (targetOpacity - cell.opacity) * 0.25;
+      cell.scale += (targetScale - cell.scale) * 0.25;
+      cell.fillProgress += (targetFillProgress - cell.fillProgress) * 0.25;
+
+      // Snap values when very close to target to prevent infinite redraws
+      if (Math.abs(cell.opacity - targetOpacity) < 0.005) cell.opacity = targetOpacity;
+      if (Math.abs(cell.scale - targetScale) < 0.005) cell.scale = targetScale;
+      if (Math.abs(cell.fillProgress - targetFillProgress) < 0.005) cell.fillProgress = targetFillProgress;
+
+      if (cell.opacity !== prevOpacity || cell.scale !== prevScale || cell.fillProgress !== prevFill) {
+        needsRedraw = true;
+      }
+    }
+
+    // Only draw the canvas if grid values change or cells are currently animating
     if (
       company.currentCount !== targetCount ||
       company.currentFilled !== targetFilled ||
-      company.currentCleared !== targetCleared
+      company.currentCleared !== targetCleared ||
+      needsRedraw
     ) {
-      const cells = company.activeCells;
-      const diagIndices = company.diagonalIndices;
-
-      if (elapsed < p1) {
-        // Phase 1: Construction (reveal diagonally in O(delta) operations)
-        const from = company.lastTargetCount;
-        const to = targetCount;
-        if (to > from) {
-          for (let idx = from; idx < to; idx++) {
-            const cellIndex = diagIndices[idx];
-            const cell = cells[cellIndex];
-            if (company.cellStates[cellIndex] !== 'sub') {
-              cell.className = 'srm-cell srm-cell--sub';
-              company.cellStates[cellIndex] = 'sub';
-            }
-          }
-        } else if (to < from) {
-          for (let idx = to; idx < from; idx++) {
-            const cellIndex = diagIndices[idx];
-            const cell = cells[cellIndex];
-            if (company.cellStates[cellIndex] !== 'hidden') {
-              cell.className = 'srm-cell srm-cell--hidden';
-              company.cellStates[cellIndex] = 'hidden';
-            }
-          }
-        }
-        company.lastTargetCount = targetCount;
-      } else if (elapsed < p1 + p2 + p3) {
-        // Phase 2 & 3: Revenue Fill & Pause (reveal sequentially row-by-row in O(delta) operations)
-        const from = company.lastTargetFilled;
-        const to = targetFilled;
-        if (to > from) {
-          for (let i = from; i < to; i++) {
-            const cell = cells[i];
-            if (company.cellStates[i] !== 'rev') {
-              cell.className = 'srm-cell srm-cell--rev';
-              company.cellStates[i] = 'rev';
-            }
-          }
-        } else if (to < from) {
-          for (let i = to; i < from; i++) {
-            const cell = cells[i];
-            if (company.cellStates[i] !== 'sub') {
-              cell.className = 'srm-cell srm-cell--sub';
-              company.cellStates[i] = 'sub';
-            }
-          }
-        }
-        company.lastTargetFilled = targetFilled;
-      } else {
-        // Phase 4: Diagonal Clear (hide diagonally from top-left to bottom-right in O(delta) operations)
-        const from = company.lastTargetCleared;
-        const to = targetCleared;
-        if (to > from) {
-          for (let idx = from; idx < to; idx++) {
-            const cellIndex = diagIndices[idx];
-            const cell = cells[cellIndex];
-            if (company.cellStates[cellIndex] !== 'hidden') {
-              cell.className = 'srm-cell srm-cell--hidden';
-              company.cellStates[cellIndex] = 'hidden';
-            }
-          }
-        } else if (to < from) {
-          for (let idx = to; idx < from; idx++) {
-            const cellIndex = diagIndices[idx];
-            const cell = cells[cellIndex];
-            const expectedState = cellIndex < revCells ? 'rev' : 'sub';
-            if (company.cellStates[cellIndex] !== expectedState) {
-              cell.className = `srm-cell srm-cell--${expectedState}`;
-              company.cellStates[cellIndex] = expectedState;
-            }
-          }
-        }
-        company.lastTargetCleared = targetCleared;
-      }
-
+      this._drawCanvas(company);
       company.currentCount = targetCount;
       company.currentFilled = targetFilled;
       company.currentCleared = targetCleared;
