@@ -37,8 +37,10 @@
 .section-hero {
   /* Base is calc(var(--sp-9) * 2.5) = 240px top/bottom.
      Reduce bottom so Chapter Header below doesn't drift too far. */
-  padding-top: calc(var(--sp-9) * 1.8) !important; /* ~173px */
-  padding-bottom: var(--sp-9) !important;           /* 96px   */
+  padding-top: calc(var(--sp-9) * 1.8) !important;
+  /* ~173px */
+  padding-bottom: var(--sp-9) !important;
+  /* 96px   */
   min-height: 45vh !important;
 }
 
@@ -50,8 +52,10 @@
 /* Base chapter-header has 96px top+bottom. pt-section-xl adds another 192px
    on top → total 288px. We unify this to a single, clean 96px entry. */
 .chapter-header {
-  padding-top: var(--sp-9) !important;   /* 96px */
-  padding-bottom: var(--sp-7) !important; /* 48px */
+  padding-top: var(--sp-9) !important;
+  /* 96px */
+  padding-bottom: var(--sp-7) !important;
+  /* 48px */
 }
 
 /* Neutralise the .pt-section-xl and .pt-section-lg utility classes
@@ -63,12 +67,14 @@
 
 /* Kicker (Chapter 01 / eyebrow) bottom gap */
 .chapter-header__kicker {
-  margin-bottom: var(--sp-5) !important; /* 24px */
+  margin-bottom: var(--sp-5) !important;
+  /* 24px */
 }
 
 /* Title bottom gap */
 .chapter-header__title {
-  margin-bottom: var(--sp-4) !important; /* 16px */
+  margin-bottom: var(--sp-4) !important;
+  /* 16px */
 }
 
 
@@ -79,7 +85,8 @@
 /* Base content-block has 96px top. pt-section-lg adds another 144px.
    Total could reach 240px. We collapse this to a single 64px gap. */
 .content-block {
-  padding-top: var(--sp-8) !important;  /* 64px */
+  padding-top: var(--sp-8) !important;
+  /* 64px */
   padding-bottom: 0 !important;
 }
 
@@ -87,26 +94,31 @@
    they should not add on top of content-block's own top padding.
    Instead they provide a slightly larger gap for first modules. */
 .content-block.pt-section-lg {
-  padding-top: var(--sp-8) !important;  /* 64px — same, no stacking */
+  padding-top: var(--sp-8) !important;
+  /* 64px — same, no stacking */
 }
 
 .content-block.pt-section-xl {
-  padding-top: var(--sp-9) !important;  /* 96px — first module after chapter header */
+  padding-top: var(--sp-9) !important;
+  /* 96px — first module after chapter header */
 }
 
 /* Heading inside content block */
 .content-block__heading {
-  margin-bottom: var(--sp-4) !important; /* 16px */
+  margin-bottom: var(--sp-4) !important;
+  /* 16px */
 }
 
 /* Module progress indicator */
 .module-progress {
-  margin-bottom: var(--sp-3) !important; /* 12px */
+  margin-bottom: var(--sp-3) !important;
+  /* 12px */
 }
 
 /* Lead editorial paragraph */
 .lead-editorial {
-  margin-bottom: var(--sp-5) !important; /* 24px */
+  margin-bottom: var(--sp-5) !important;
+  /* 24px */
 }
 
 /* Explicit mb-md override on lead-editorial: keep 24px */
@@ -122,26 +134,30 @@
 /* figure-standard had margin-bottom: 128px — far too much.
    Reduce to 64px which is already a very generous gap. */
 .figure-standard {
-  margin-bottom: var(--sp-8) !important;  /* 64px */
+  margin-bottom: var(--sp-8) !important;
+  /* 64px */
 }
 
 /* chart-block base had padding-top/bottom: 64px each.
    Since content-block now provides 64px above, the chart-block
    should only need minimal internal breathing. */
 .chart-block {
-  padding-top: var(--sp-5) !important;    /* 24px */
+  padding-top: var(--sp-5) !important;
+  /* 24px */
   padding-bottom: 0 !important;
 }
 
 /* Chart block header (title + source row) */
 .chart-block__header {
-  margin-bottom: var(--sp-5) !important;  /* 24px */
+  margin-bottom: var(--sp-5) !important;
+  /* 24px */
 }
 
 /* Chart canvas — ensure consistent breathing inside */
 .chart-block__canvas {
   /* min-height stays 360px from report.css. Padding is standardised. */
-  padding: var(--sp-5) !important;        /* 24px uniform internal padding */
+  padding: var(--sp-5) !important;
+  /* 24px uniform internal padding */
 }
 
 /* For chart canvases that have custom internal layouts (flex columns):
@@ -153,19 +169,24 @@
 /* Consistent caption spacing: 16px above, 24px below */
 .chart-block__caption,
 figcaption.chart-block__caption {
-  margin-top: var(--sp-4) !important;     /* 16px */
-  margin-bottom: var(--sp-5) !important;  /* 24px */
+  margin-top: var(--sp-4) !important;
+  /* 16px */
+  margin-bottom: var(--sp-5) !important;
+  /* 24px */
 }
 
 /* Editorial image blocks: standardised breathing room */
 .editorial-image-block {
-  margin-top: var(--sp-6) !important;   /* 32px above */
-  margin-bottom: var(--sp-6) !important; /* 32px below */
+  margin-top: var(--sp-6) !important;
+  /* 32px above */
+  margin-bottom: var(--sp-6) !important;
+  /* 32px below */
 }
 
 /* Caption below editorial images */
 .editorial-image-block .media-caption {
-  margin-top: var(--sp-4) !important;    /* 16px */
+  margin-top: var(--sp-4) !important;
+  /* 16px */
 }
 
 
@@ -174,18 +195,21 @@ figcaption.chart-block__caption {
    ================================================================ */
 
 .takeaway-card {
-  margin-top: var(--sp-5) !important;    /* 24px from caption */
+  margin-top: var(--sp-5) !important;
+  /* 24px from caption */
   margin-bottom: 0 !important;
 }
 
 /* Heading inside takeaway card */
 .takeaway-card__label {
-  margin-bottom: var(--sp-3) !important; /* 12px */
+  margin-bottom: var(--sp-3) !important;
+  /* 12px */
 }
 
 /* Gap between bullet items */
 .takeaway-card__list {
-  gap: var(--sp-3) !important;           /* 12px between items */
+  gap: var(--sp-3) !important;
+  /* 12px between items */
 }
 
 
@@ -195,23 +219,33 @@ figcaption.chart-block__caption {
 
 /* Inline-styled chapter summaries (div with border-top) */
 [style*="border-top: 1px solid var(--c-border)"][style*="margin-bottom: var(--sp-8)"] {
-  padding-top: var(--sp-5) !important;   /* 24px */
-  margin-top: var(--sp-7) !important;    /* 48px from last figure */
-  margin-bottom: var(--sp-8) !important; /* 64px before next chapter */
+  padding-top: var(--sp-5) !important;
+  /* 24px */
+  margin-top: var(--sp-7) !important;
+  /* 48px from last figure */
+  margin-bottom: var(--sp-8) !important;
+  /* 64px before next chapter */
 }
 
 /* Class-based chapter summaries */
 .chapter-summary {
-  padding-top: var(--sp-5) !important;   /* 24px */
-  padding-bottom: var(--sp-7) !important; /* 48px */
-  margin-top: var(--sp-6) !important;    /* 32px from last content */
-  margin-bottom: var(--sp-7) !important; /* 48px before next chapter */
+  padding-top: var(--sp-5) !important;
+  /* 24px */
+  padding-bottom: var(--sp-7) !important;
+  /* 48px */
+  margin-top: var(--sp-6) !important;
+  /* 32px from last content */
+  margin-bottom: var(--sp-7) !important;
+  /* 48px before next chapter */
 }
 
 .chapter-summary--bordered {
-  padding-top: var(--sp-5) !important;   /* 24px */
-  margin-top: var(--sp-6) !important;    /* 32px */
-  margin-bottom: var(--sp-8) !important; /* 64px */
+  padding-top: var(--sp-5) !important;
+  /* 24px */
+  margin-top: var(--sp-6) !important;
+  /* 32px */
+  margin-bottom: var(--sp-8) !important;
+  /* 64px */
 }
 
 
@@ -220,14 +254,17 @@ figcaption.chart-block__caption {
    ================================================================ */
 
 .comparison-block {
-  margin-top: var(--sp-5) !important;   /* 24px */
-  margin-bottom: var(--sp-8) !important; /* 64px */
+  margin-top: var(--sp-5) !important;
+  /* 24px */
+  margin-bottom: var(--sp-8) !important;
+  /* 64px */
 }
 
 /* Takeaway card inside comparison block (uses .mt-md) */
 .comparison-block .takeaway-card,
 .takeaway-card.mt-md {
-  margin-top: var(--sp-5) !important;   /* 24px */
+  margin-top: var(--sp-5) !important;
+  /* 24px */
 }
 
 
@@ -237,16 +274,20 @@ figcaption.chart-block__caption {
 
 .stat-card {
   /* Preserve all visual styling; only normalise padding */
-  padding: var(--sp-5) var(--sp-5) !important; /* 24px uniform */
+  padding: var(--sp-5) var(--sp-5) !important;
+  /* 24px uniform */
 }
 
 .metric-dashboard {
-  margin-bottom: var(--sp-7) !important; /* 48px */
-  gap: var(--sp-5) !important;           /* 24px between cards */
+  margin-bottom: var(--sp-7) !important;
+  /* 48px */
+  gap: var(--sp-5) !important;
+  /* 24px between cards */
 }
 
 .metric-card {
-  padding: var(--sp-5) !important;       /* 24px */
+  padding: var(--sp-5) !important;
+  /* 24px */
 }
 
 
@@ -255,8 +296,10 @@ figcaption.chart-block__caption {
    ================================================================ */
 
 .guiding-question {
-  margin-top: var(--sp-6) !important;   /* 32px */
-  padding-top: var(--sp-5) !important;  /* 24px */
+  margin-top: var(--sp-6) !important;
+  /* 32px */
+  padding-top: var(--sp-5) !important;
+  /* 24px */
 }
 
 
@@ -265,21 +308,27 @@ figcaption.chart-block__caption {
    ================================================================ */
 
 .report-toc {
-  margin-top: var(--sp-7) !important;    /* 48px */
-  margin-bottom: var(--sp-9) !important; /* 96px */
+  margin-top: var(--sp-7) !important;
+  /* 48px */
+  margin-bottom: var(--sp-9) !important;
+  /* 96px */
 }
 
 .report-toc__section {
-  margin-bottom: var(--sp-7) !important; /* 48px */
+  margin-bottom: var(--sp-7) !important;
+  /* 48px */
 }
 
 .report-toc__section-title {
-  margin-bottom: var(--sp-4) !important; /* 16px */
-  padding-bottom: var(--sp-2) !important; /* 8px */
+  margin-bottom: var(--sp-4) !important;
+  /* 16px */
+  padding-bottom: var(--sp-2) !important;
+  /* 8px */
 }
 
 .report-toc__list {
-  gap: var(--sp-3) !important;           /* 12px between items */
+  gap: var(--sp-3) !important;
+  /* 12px between items */
 }
 
 
@@ -288,29 +337,37 @@ figcaption.chart-block__caption {
    ================================================================ */
 
 .cover-hero {
-  padding-top: var(--sp-10) !important;  /* 128px */
-  padding-bottom: var(--sp-9) !important; /* 96px */
+  padding-top: var(--sp-10) !important;
+  /* 128px */
+  padding-bottom: var(--sp-9) !important;
+  /* 96px */
 }
 
 .cover-hero__title {
-  margin-bottom: var(--sp-4) !important; /* 16px */
+  margin-bottom: var(--sp-4) !important;
+  /* 16px */
 }
 
 .cover-hero__subtitle {
-  margin-bottom: var(--sp-6) !important; /* 32px */
+  margin-bottom: var(--sp-6) !important;
+  /* 32px */
 }
 
 .cover-hero__intro {
-  margin-bottom: var(--sp-7) !important; /* 48px */
+  margin-bottom: var(--sp-7) !important;
+  /* 48px */
 }
 
 .cover-hero__image-wrapper {
-  margin-bottom: var(--sp-7) !important; /* 48px */
+  margin-bottom: var(--sp-7) !important;
+  /* 48px */
 }
 
 .cover-hero__meta-footer {
-  margin-top: var(--sp-7) !important;    /* 48px */
-  padding-top: var(--sp-5) !important;   /* 24px */
+  margin-top: var(--sp-7) !important;
+  /* 48px */
+  padding-top: var(--sp-5) !important;
+  /* 24px */
 }
 
 
@@ -320,8 +377,10 @@ figcaption.chart-block__caption {
 
 /* The executive summary block uses inline styles — target the section */
 #summary {
-  padding-top: var(--sp-9) !important;   /* 96px */
-  padding-bottom: var(--sp-9) !important; /* 96px */
+  padding-top: var(--sp-9) !important;
+  /* 96px */
+  padding-bottom: var(--sp-9) !important;
+  /* 96px */
 }
 
 
@@ -330,13 +389,16 @@ figcaption.chart-block__caption {
    ================================================================ */
 
 .process-flow {
-  padding-top: var(--sp-4) !important;   /* 16px */
-  padding-bottom: var(--sp-4) !important; /* 16px */
+  padding-top: var(--sp-4) !important;
+  /* 16px */
+  padding-bottom: var(--sp-4) !important;
+  /* 16px */
 }
 
 /* Viz-insight note below process flow */
 .viz-insight {
-  margin-top: var(--sp-5) !important;    /* 24px */
+  margin-top: var(--sp-5) !important;
+  /* 24px */
   padding: var(--sp-4) var(--sp-5);
 }
 
@@ -346,11 +408,13 @@ figcaption.chart-block__caption {
    ================================================================ */
 
 .pool-cards {
-  margin-bottom: var(--sp-4) !important; /* 16px */
+  margin-bottom: var(--sp-4) !important;
+  /* 16px */
 }
 
 .pool-total {
-  margin-bottom: var(--sp-5) !important; /* 24px */
+  margin-bottom: var(--sp-5) !important;
+  /* 24px */
 }
 
 
@@ -359,9 +423,10 @@ figcaption.chart-block__caption {
    ================================================================ */
 
 /* Remove the old rule and use a leaner gap */
-.content-block__body + figure,
-.content-block__body + .chart-block {
-  margin-top: var(--sp-4) !important;   /* 16px */
+.content-block__body+figure,
+.content-block__body+.chart-block {
+  margin-top: var(--sp-4) !important;
+  /* 16px */
 }
 
 
@@ -372,11 +437,13 @@ figcaption.chart-block__caption {
 /* These are now used only on section-hero and first module-in-chapter.
    Redefine to match the new scale. */
 .pt-section-lg {
-  padding-top: var(--sp-8) !important;  /* 64px — module gap */
+  padding-top: var(--sp-8) !important;
+  /* 64px — module gap */
 }
 
 .pt-section-xl {
-  padding-top: var(--sp-9) !important;  /* 96px — chapter entry */
+  padding-top: var(--sp-9) !important;
+  /* 96px — chapter entry */
 }
 
 
@@ -385,12 +452,15 @@ figcaption.chart-block__caption {
    ================================================================ */
 
 .srm-cards {
-  gap: var(--sp-4) !important;           /* 16px between cards */
+  gap: var(--sp-4) !important;
+  /* 16px between cards */
 }
 
 .srm-card {
-  padding: var(--sp-4) !important;       /* 16px */
-  gap: var(--sp-3) !important;           /* 12px between internal elements */
+  padding: var(--sp-4) !important;
+  /* 16px */
+  gap: var(--sp-3) !important;
+  /* 12px between internal elements */
 }
 
 
@@ -399,11 +469,13 @@ figcaption.chart-block__caption {
    ================================================================ */
 
 .cost-split {
-  padding: var(--sp-5) 0 !important;    /* 24px top/bottom */
+  padding: var(--sp-5) 0 !important;
+  /* 24px top/bottom */
 }
 
 .cost-split__card {
-  padding: var(--sp-5) !important;       /* 24px */
+  padding: var(--sp-5) !important;
+  /* 24px */
 }
 
 
@@ -412,7 +484,8 @@ figcaption.chart-block__caption {
    ================================================================ */
 
 .competitor-card {
-  padding: var(--sp-5) !important;       /* 24px */
+  padding: var(--sp-5) !important;
+  /* 24px */
 }
 
 
@@ -422,9 +495,10 @@ figcaption.chart-block__caption {
 
 /* Ensure a chapter-header that immediately follows a section-hero
    inherits no extra spacing from the section-hero's bottom padding */
-.section-hero + .chapter-header,
-.section-hero + header.chapter-header {
-  padding-top: var(--sp-9) !important;   /* 96px */
+.section-hero+.chapter-header,
+.section-hero+header.chapter-header {
+  padding-top: var(--sp-9) !important;
+  /* 96px */
 }
 
 
@@ -442,7 +516,8 @@ figcaption.chart-block__caption {
 .takeaway-card,
 .insight-card,
 .chapter-summary {
-  max-width: var(--col-w) !important;    /* 820px */
+  max-width: var(--col-w) !important;
+  /* 820px */
 }
 
 
@@ -452,48 +527,61 @@ figcaption.chart-block__caption {
 
 @media (max-width: 1024px) {
   .section-hero {
-    padding-top: var(--sp-9) !important;  /* 96px */
-    padding-bottom: var(--sp-7) !important; /* 48px */
+    padding-top: var(--sp-9) !important;
+    /* 96px */
+    padding-bottom: var(--sp-7) !important;
+    /* 48px */
     min-height: 40vh !important;
   }
 
   .chapter-header,
   .chapter-header.pt-section-xl {
-    padding-top: var(--sp-8) !important;  /* 64px */
-    padding-bottom: var(--sp-5) !important; /* 24px */
+    padding-top: var(--sp-8) !important;
+    /* 64px */
+    padding-bottom: var(--sp-5) !important;
+    /* 24px */
   }
 
   .content-block,
   .content-block.pt-section-lg,
   .content-block.pt-section-xl {
-    padding-top: var(--sp-7) !important;  /* 48px */
+    padding-top: var(--sp-7) !important;
+    /* 48px */
     padding-bottom: 0 !important;
   }
 
   .figure-standard {
-    margin-bottom: var(--sp-7) !important; /* 48px */
+    margin-bottom: var(--sp-7) !important;
+    /* 48px */
   }
 
   .editorial-image-block {
-    margin-top: var(--sp-5) !important;   /* 24px */
-    margin-bottom: var(--sp-5) !important; /* 24px */
+    margin-top: var(--sp-5) !important;
+    /* 24px */
+    margin-bottom: var(--sp-5) !important;
+    /* 24px */
   }
 
   .chart-block {
-    padding-top: var(--sp-4) !important;   /* 16px */
+    padding-top: var(--sp-4) !important;
+    /* 16px */
   }
 
   .pt-section-lg {
-    padding-top: var(--sp-7) !important;   /* 48px */
+    padding-top: var(--sp-7) !important;
+    /* 48px */
   }
 
   .pt-section-xl {
-    padding-top: var(--sp-8) !important;   /* 64px */
+    padding-top: var(--sp-8) !important;
+    /* 64px */
   }
 
   .cover-hero {
-    padding-top: var(--sp-9) !important;   /* 96px */
-    padding-bottom: var(--sp-7) !important; /* 48px */
+    padding-top: var(--sp-9) !important;
+    /* 96px */
+    padding-bottom: var(--sp-7) !important;
+    /* 48px */
   }
 }
 
@@ -504,94 +592,122 @@ figcaption.chart-block__caption {
 
 @media (max-width: 768px) {
   .section-hero {
-    padding-top: var(--sp-8) !important;  /* 64px */
-    padding-bottom: var(--sp-6) !important; /* 32px */
+    padding-top: var(--sp-8) !important;
+    /* 64px */
+    padding-bottom: var(--sp-6) !important;
+    /* 32px */
     min-height: 30vh !important;
   }
 
   .chapter-header,
   .chapter-header.pt-section-xl {
-    padding-top: var(--sp-7) !important;  /* 48px */
-    padding-bottom: var(--sp-5) !important; /* 24px */
+    padding-top: var(--sp-7) !important;
+    /* 48px */
+    padding-bottom: var(--sp-5) !important;
+    /* 24px */
   }
 
   .content-block,
   .content-block.pt-section-lg,
   .content-block.pt-section-xl {
-    padding-top: var(--sp-6) !important;  /* 32px */
+    padding-top: var(--sp-6) !important;
+    /* 32px */
     padding-bottom: 0 !important;
   }
 
   .figure-standard {
-    margin-bottom: var(--sp-6) !important; /* 32px */
+    margin-bottom: var(--sp-6) !important;
+    /* 32px */
   }
 
   .editorial-image-block {
-    margin-top: var(--sp-4) !important;   /* 16px */
-    margin-bottom: var(--sp-4) !important; /* 16px */
+    margin-top: var(--sp-4) !important;
+    /* 16px */
+    margin-bottom: var(--sp-4) !important;
+    /* 16px */
   }
 
   .chart-block {
-    padding-top: var(--sp-3) !important;   /* 12px */
+    padding-top: var(--sp-3) !important;
+    /* 12px */
   }
 
   .chart-block__canvas {
-    padding: var(--sp-3) !important;       /* 12px */
+    padding: var(--sp-3) !important;
+    /* 12px */
   }
 
   .takeaway-card {
-    margin-top: var(--sp-4) !important;   /* 16px */
+    margin-top: var(--sp-4) !important;
+    /* 16px */
   }
 
   .chapter-summary,
   .chapter-summary--bordered {
-    padding-top: var(--sp-4) !important;  /* 16px */
-    margin-top: var(--sp-5) !important;   /* 24px */
-    margin-bottom: var(--sp-6) !important; /* 32px */
+    padding-top: var(--sp-4) !important;
+    /* 16px */
+    margin-top: var(--sp-5) !important;
+    /* 24px */
+    margin-bottom: var(--sp-6) !important;
+    /* 32px */
   }
 
   .pt-section-lg {
-    padding-top: var(--sp-6) !important;  /* 32px */
+    padding-top: var(--sp-6) !important;
+    /* 32px */
   }
 
   .pt-section-xl {
-    padding-top: var(--sp-7) !important;  /* 48px */
+    padding-top: var(--sp-7) !important;
+    /* 48px */
   }
 
   .guiding-question {
-    margin-top: var(--sp-4) !important;   /* 16px */
+    margin-top: var(--sp-4) !important;
+    /* 16px */
   }
 
   .metric-dashboard {
-    gap: var(--sp-4) !important;          /* 16px */
-    margin-bottom: var(--sp-6) !important; /* 32px */
+    gap: var(--sp-4) !important;
+    /* 16px */
+    margin-bottom: var(--sp-6) !important;
+    /* 32px */
   }
 
   .cover-hero {
-    padding-top: var(--sp-8) !important;   /* 64px */
-    padding-bottom: var(--sp-6) !important; /* 32px */
+    padding-top: var(--sp-8) !important;
+    /* 64px */
+    padding-bottom: var(--sp-6) !important;
+    /* 32px */
   }
 
   .cover-hero__intro {
-    margin-bottom: var(--sp-5) !important; /* 24px */
+    margin-bottom: var(--sp-5) !important;
+    /* 24px */
   }
 
   .cover-hero__image-wrapper {
-    margin-bottom: var(--sp-5) !important; /* 24px */
+    margin-bottom: var(--sp-5) !important;
+    /* 24px */
   }
 
   .cover-hero__meta-footer {
-    margin-top: var(--sp-5) !important;    /* 24px */
-    padding-top: var(--sp-4) !important;   /* 16px */
+    margin-top: var(--sp-5) !important;
+    /* 24px */
+    padding-top: var(--sp-4) !important;
+    /* 16px */
   }
 
   .report-toc {
-    margin-top: var(--sp-6) !important;    /* 32px */
-    margin-bottom: var(--sp-7) !important; /* 48px */
+    margin-top: var(--sp-6) !important;
+    /* 32px */
+    margin-bottom: var(--sp-7) !important;
+    /* 48px */
   }
 
   .cost-split {
-    gap: var(--sp-5) !important;           /* 24px */
+    gap: var(--sp-5) !important;
+    /* 24px */
   }
 }
 
@@ -602,50 +718,63 @@ figcaption.chart-block__caption {
 
 @media (max-width: 480px) {
   .section-hero {
-    padding-top: var(--sp-7) !important;  /* 48px */
-    padding-bottom: var(--sp-5) !important; /* 24px */
+    padding-top: var(--sp-7) !important;
+    /* 48px */
+    padding-bottom: var(--sp-5) !important;
+    /* 24px */
     min-height: auto !important;
   }
 
   .chapter-header,
   .chapter-header.pt-section-xl {
-    padding-top: var(--sp-6) !important;  /* 32px */
-    padding-bottom: var(--sp-4) !important; /* 16px */
+    padding-top: var(--sp-6) !important;
+    /* 32px */
+    padding-bottom: var(--sp-4) !important;
+    /* 16px */
   }
 
   .content-block,
   .content-block.pt-section-lg,
   .content-block.pt-section-xl {
-    padding-top: var(--sp-5) !important;  /* 24px */
+    padding-top: var(--sp-5) !important;
+    /* 24px */
   }
 
   .figure-standard {
-    margin-bottom: var(--sp-5) !important; /* 24px */
+    margin-bottom: var(--sp-5) !important;
+    /* 24px */
   }
 
   .pt-section-lg {
-    padding-top: var(--sp-5) !important;  /* 24px */
+    padding-top: var(--sp-5) !important;
+    /* 24px */
   }
 
   .pt-section-xl {
-    padding-top: var(--sp-6) !important;  /* 32px */
+    padding-top: var(--sp-6) !important;
+    /* 32px */
   }
 
   .chart-block__header {
     flex-direction: column;
-    gap: var(--sp-3) !important;           /* 12px */
+    gap: var(--sp-3) !important;
+    /* 12px */
   }
 
   .chart-block__source {
-    white-space: normal !important;        /* allow wrapping on small screens */
+    white-space: normal !important;
+    /* allow wrapping on small screens */
   }
 
   .guiding-question {
-    margin-top: var(--sp-4) !important;   /* 16px */
-    padding-top: var(--sp-4) !important;  /* 16px */
+    margin-top: var(--sp-4) !important;
+    /* 16px */
+    padding-top: var(--sp-4) !important;
+    /* 16px */
   }
 
   .section-hero__title {
-    font-size: clamp(1.875rem, 8vw, 3rem) !important; /* tighten on small */
+    font-size: clamp(1.875rem, 8vw, 3rem) !important;
+    /* tighten on small */
   }
 }

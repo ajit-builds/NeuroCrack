@@ -443,11 +443,11 @@ const SubscriberRevenueMatrix = {
     startTime: null,
     isPlaying: false,
     observer: null,
-    durationPhase1: 1500, // Construction phase (1.5s)
-    durationPhase2: 1500, // Revenue Fill phase (1.5s)
-    durationPhase3: 1200, // Reading Pause phase (1.2s)
-    durationPhase4: 800,  // Soft reset / clearing wave (0.8s)
-    totalDuration: 5000   // Total loop (5.0s)
+    durationPhase1: 1500,  // Construction phase (1.5s - original fast speed)
+    durationPhase2: 24000, // Revenue Fill phase (24s - extremely slow sequential fill)
+    durationPhase3: 1200,  // Reading Pause phase (1.2s - short pause after completed fill)
+    durationPhase4: 800,   // Soft reset / clearing wave (0.8s - original fast wipe reset)
+    totalDuration: 27500   // Total loop duration (27.5s sum of all phases)
   },
 
   /* ── Bootstrap ─────────────────────────────────────────────────── */
@@ -828,8 +828,16 @@ const SubscriberRevenueMatrix = {
       } else if (elapsed < p1 + p2 + p3) {
         targetOpacity = 1;
         targetScale = 1.0;
-        if (i < targetFilled) {
-          targetFillProgress = 1;
+        if (i < revCells) {
+          if (elapsed < p1 + p2) {
+            // Sequential one-by-one fill during Phase 2
+            const progress = (elapsed - p1) / p2;
+            const fillProgressFloat = progress * revCells;
+            targetFillProgress = Math.max(0, Math.min(1, fillProgressFloat - i));
+          } else {
+            // Fully filled during Phase 3 Pause
+            targetFillProgress = 1.0;
+          }
         }
       } else {
         const diagIdx = company.diagonalRanks[i];
@@ -837,7 +845,7 @@ const SubscriberRevenueMatrix = {
           targetOpacity = 1;
           targetScale = 1.0;
           if (i < revCells) {
-            targetFillProgress = 1;
+            targetFillProgress = 1.0;
           }
         }
       }
@@ -850,7 +858,13 @@ const SubscriberRevenueMatrix = {
       // Smooth interpolation using simple exponential decay
       cell.opacity += (targetOpacity - cell.opacity) * 0.25;
       cell.scale += (targetScale - cell.scale) * 0.25;
-      cell.fillProgress += (targetFillProgress - cell.fillProgress) * 0.25;
+
+      // For sequential fill in Phase 2, follow targetFillProgress directly to prevent multiple cells blending
+      if (elapsed >= p1 && elapsed < p1 + p2 && i < revCells) {
+        cell.fillProgress = targetFillProgress;
+      } else {
+        cell.fillProgress += (targetFillProgress - cell.fillProgress) * 0.25;
+      }
 
       // Snap values when very close to target to prevent infinite redraws
       if (Math.abs(cell.opacity - targetOpacity) < 0.005) cell.opacity = targetOpacity;
@@ -1383,7 +1397,7 @@ const BrandTypewriter = {
             this.timeoutRef3 = setTimeout(() => {
               this.reset();
               this.start();
-            }, 3000); // 3-second pause at completed title before loop restart
+            }, 500); // 0.5-second pause at completed title before loop restart
           }, 500);
         }
       }
@@ -1424,7 +1438,7 @@ const TrendGraphEngine = {
     }));
 
     const pathLength = path.getTotalLength();
-    const duration = Math.round(pathLength * 3.1);
+    const duration = Math.round(pathLength * 5.2);
 
     const component = {
       requestRef: null,
@@ -1535,11 +1549,11 @@ const TrendGraphEngine = {
                 terminalLabel.classList.add('fig1-1-fade-in');
               }
 
-              // Loop reset: wait 3 seconds, then restart animation!
+              // Loop reset: wait 1.2 seconds, then restart animation!
               this.timeoutRef3 = setTimeout(() => {
                 this.reset();
                 this.start();
-              }, 3000);
+              }, 1200);
 
             }, 100);
           }, 120);
@@ -1583,8 +1597,8 @@ const ComparisonGraphEngine = {
       timeoutRef4: null,
       isPlaying: false,
       startTime: null,
-      baselineDuration: 1200,
-      accentDuration: 1200,
+      baselineDuration: 2000,
+      accentDuration: 2000,
 
       start() {
         const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -1675,11 +1689,11 @@ const ComparisonGraphEngine = {
             this.timeoutRef3 = setTimeout(() => {
               labels.forEach(el => el.style.opacity = '1');
 
-              // Loop reset: wait 3 seconds, then restart comparison!
+              // Loop reset: wait 1.2 seconds, then restart comparison!
               this.timeoutRef4 = setTimeout(() => {
                 this.reset();
                 this.start();
-              }, 3000);
+              }, 1200);
 
             }, 200);
           }, 200);
