@@ -2500,56 +2500,18 @@
               }
 
               .subscriber-flow__arrow {
-
-
-                display: flex;
-                align-items: center;
-                justify-content: center;
-
-                flex: 0 0 24px;
-                width: 24px;
-                height: 24px;
-
-                margin: 0 8px;
-                /* keeps it centered between cards */
-
-                color: var(--c-accent);
-                /* use your accent color instead of border */
-
-                opacity: 0.9;
-
-                animation: arrowFloat 2.5s ease-in-out infinite;
+                align-self: center;
+                flex-shrink: 0;
+                width: 14px;
+                height: 14px;
+                color: var(--c-border);
               }
-
-              .subscriber-flow__arrow svg {
-                width: 20px;
-                height: 20px;
-                display: block;
-              }
-
-              @keyframes arrowFloat {
-
-                0%,
-                100% {
-                  transform: translateY(0);
-                }
-
-                50% {
-                  transform: translateY(-2px);
-                }
-              }
-
-
 
               @media (max-width: 900px) {
-
-
-
                 .subscriber-flow {
                   flex-direction: column;
                   align-items: center;
-                  justify-content: center;
-                  gap: 18px;
+                  gap: var(--sp-4);
                 }
 
                 .subscriber-flow__card {
@@ -2559,37 +2521,7 @@
                 }
 
                 .subscriber-flow__arrow {
-                  width: 24px;
-                  height: 24px;
-
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-
-                  margin: 0;
-
-                  align-self: center;
-
-                  animation: arrowFloatMobile 2.5s ease-in-out infinite;
-                }
-
-                .subscriber-flow__arrow svg {
-                  width: 20px;
-                  height: 20px;
                   transform: rotate(90deg);
-                }
-
-              }
-
-              @keyframes arrowFloatMobile {
-
-                0%,
-                100% {
-                  transform: translateY(0);
-                }
-
-                50% {
-                  transform: translateY(-2px);
                 }
               }
             </style>
@@ -2603,12 +2535,11 @@
                 <h5
                   style="margin: 0 0 var(--sp-2) 0; font-size: 0.9375rem; font-weight: 700; color: var(--c-text-1); line-height: 1.3;">
                   100K+ Qualified Subscribers</h5>
-                <polyline points="5 13 12 20 19 13"></polyline>
-                </svg>
+                <p style="margin: 0; font-size: 0.725rem; color: var(--c-text-3); line-height: 1.4;">Doctors &amp; Medical Aspirants</p>
               </div>
 
               <!-- Arrow -->
-              <svg class="subscriber-flow__arrow flow-arrow flow-arrow--h" viewBox="0 0 24 24" fill="none"
+              <svg class="subscriber-flow__arrow" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="1.5">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
@@ -2627,7 +2558,7 @@
               </div>
 
               <!-- Arrow -->
-              <svg class="subscriber-flow__arrow flow-arrow flow-arrow--h" viewBox="0 0 24 24" fill="none"
+              <svg class="subscriber-flow__arrow" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="1.5">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
@@ -2646,7 +2577,7 @@
               </div>
 
               <!-- Arrow -->
-              <svg class="subscriber-flow__arrow flow-arrow flow-arrow--h" viewBox="0 0 24 24" fill="none"
+              <svg class="subscriber-flow__arrow" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="1.5">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
@@ -2665,7 +2596,7 @@
               </div>
 
               <!-- Arrow -->
-              <svg class="subscriber-flow__arrow flow-arrow flow-arrow--h" viewBox="0 0 24 24" fill="none"
+              <svg class="subscriber-flow__arrow" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="1.5">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
@@ -3024,7 +2955,7 @@
               <!-- Arrow Down to Center -->
               <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-accent)" stroke-width="2.2"
                 style="color: var(--c-accent) !important; stroke: var(--c-accent) !important;"
-                class="framework-arrow-v flow-arrow flow-arrow--v">
+                class="framework-arrow-v">
                 <line x1="12" y1="2" x2="12" y2="22"></line>
                 <polyline points="7 17 12 22 17 17"></polyline>
               </svg>
@@ -3058,7 +2989,7 @@
 
               <!-- Arrow Down to Scalable Digital -->
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                class="framework-arrow-v flow-arrow flow-arrow--v">
+                class="framework-arrow-v">
                 <line x1="12" y1="2" x2="12" y2="22"></line>
                 <polyline points="7 17 12 22 17 17"></polyline>
               </svg>
@@ -3071,7 +3002,7 @@
 
               <!-- Arrow Down to Long Learning Journey -->
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                class="framework-arrow-v flow-arrow flow-arrow--v">
+                class="framework-arrow-v">
                 <line x1="12" y1="2" x2="12" y2="22"></line>
                 <polyline points="7 17 12 22 17 17"></polyline>
               </svg>
@@ -3084,7 +3015,7 @@
 
               <!-- Arrow Down to Sustainable Revenue -->
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
-                class="framework-arrow-v flow-arrow flow-arrow--v">
+                class="framework-arrow-v">
                 <line x1="12" y1="2" x2="12" y2="22"></line>
                 <polyline points="7 17 12 22 17 17"></polyline>
               </svg>
@@ -3160,23 +3091,8 @@
 
               @media (max-width: 768px) {
                 .framework-arrow-v {
-                  width: 20px;
-                  height: 20px;
-
-                  margin: 12px auto !important;
-
-                  display: flex;
-                  align-items: center;
-                  justify-content: center;
-
-                  color: var(--c-accent);
-
-                  animation: frameworkArrowFloat 2.5s ease-in-out infinite;
-                }
-
-                .framework-arrow-v svg {
-                  width: 20px;
-                  height: 20px;
+                  transform: rotate(0) !important;
+                  margin: var(--sp-1) auto !important;
                 }
 
                 .framework-row {
@@ -3973,7 +3889,7 @@
                 </div>
 
                 <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-border)" stroke-width="2"
-                  style="width: 14px; height: 14px; flex-shrink: 0;" class="pipeline-arrow flow-arrow flow-arrow--h">
+                  style="width: 14px; height: 14px; flex-shrink: 0;" class="pipeline-arrow hide-mobile">
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
 
@@ -3987,7 +3903,7 @@
                 </div>
 
                 <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-border)" stroke-width="2"
-                  style="width: 14px; height: 14px; flex-shrink: 0;" class="pipeline-arrow flow-arrow flow-arrow--h">
+                  style="width: 14px; height: 14px; flex-shrink: 0;" class="pipeline-arrow hide-mobile">
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
 
@@ -4001,7 +3917,7 @@
                 </div>
 
                 <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-border)" stroke-width="2"
-                  style="width: 14px; height: 14px; flex-shrink: 0;" class="pipeline-arrow flow-arrow flow-arrow--h">
+                  style="width: 14px; height: 14px; flex-shrink: 0;" class="pipeline-arrow hide-mobile">
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
 
@@ -4015,7 +3931,7 @@
                 </div>
 
                 <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-border)" stroke-width="2"
-                  style="width: 14px; height: 14px; flex-shrink: 0;" class="pipeline-arrow flow-arrow flow-arrow--h">
+                  style="width: 14px; height: 14px; flex-shrink: 0;" class="pipeline-arrow hide-mobile">
                   <polyline points="9 18 15 12 9 6"></polyline>
                 </svg>
 
@@ -5095,7 +5011,7 @@
               </div>
               <!-- Arrow -->
               <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-border)" stroke-width="2"
-                style="width: 16px; height: 16px; flex-shrink: 0;" class="flow-arrow flow-arrow--h">
+                style="width: 14px; height: 14px; flex-shrink: 0;" class="hide-mobile">
                 <line x1="2" y1="12" x2="22" y2="12"></line>
                 <polyline points="17 7 22 12 17 17"></polyline>
               </svg>
@@ -5112,7 +5028,7 @@
               </div>
               <!-- Arrow -->
               <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-border)" stroke-width="2"
-                style="width: 16px; height: 16px; flex-shrink: 0;" class="flow-arrow flow-arrow--h">
+                style="width: 14px; height: 14px; flex-shrink: 0;" class="hide-mobile">
                 <line x1="2" y1="12" x2="22" y2="12"></line>
                 <polyline points="17 7 22 12 17 17"></polyline>
               </svg>
@@ -5129,7 +5045,7 @@
               </div>
               <!-- Arrow -->
               <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-border)" stroke-width="2"
-                style="width: 16px; height: 16px; flex-shrink: 0;" class="flow-arrow flow-arrow--h">
+                style="width: 14px; height: 14px; flex-shrink: 0;" class="hide-mobile">
                 <line x1="2" y1="12" x2="22" y2="12"></line>
                 <polyline points="17 7 22 12 17 17"></polyline>
               </svg>
@@ -5145,7 +5061,7 @@
               </div>
               <!-- Arrow -->
               <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-accent)" stroke-width="2"
-                style="width: 16px; height: 16px; flex-shrink: 0;" class="flow-arrow flow-arrow--h">
+                style="width: 14px; height: 14px; flex-shrink: 0;" class="hide-mobile">
                 <line x1="2" y1="12" x2="22" y2="12"></line>
                 <polyline points="17 7 22 12 17 17"></polyline>
               </svg>
@@ -5311,7 +5227,7 @@
               </div>
               <!-- Arrow -->
               <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-border)" stroke-width="2"
-                style="width: 14px; height: 14px; flex-shrink: 0;" class="flow-arrow flow-arrow--h">
+                style="width: 14px; height: 14px; flex-shrink: 0;" class="hide-mobile">
                 <line x1="2" y1="12" x2="22" y2="12"></line>
                 <polyline points="17 7 22 12 17 17"></polyline>
               </svg>
@@ -5327,7 +5243,7 @@
               </div>
               <!-- Arrow -->
               <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-border)" stroke-width="2"
-                style="width: 14px; height: 14px; flex-shrink: 0;" class="flow-arrow flow-arrow--h">
+                style="width: 14px; height: 14px; flex-shrink: 0;" class="hide-mobile">
                 <line x1="2" y1="12" x2="22" y2="12"></line>
                 <polyline points="17 7 22 12 17 17"></polyline>
               </svg>
@@ -5343,7 +5259,7 @@
               </div>
               <!-- Arrow -->
               <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-border)" stroke-width="2"
-                style="width: 14px; height: 14px; flex-shrink: 0;" class="flow-arrow flow-arrow--h">
+                style="width: 14px; height: 14px; flex-shrink: 0;" class="hide-mobile">
                 <line x1="2" y1="12" x2="22" y2="12"></line>
                 <polyline points="17 7 22 12 17 17"></polyline>
               </svg>
@@ -5359,7 +5275,7 @@
               </div>
               <!-- Arrow -->
               <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-border)" stroke-width="2"
-                style="width: 14px; height: 14px; flex-shrink: 0;" class="flow-arrow flow-arrow--h">
+                style="width: 14px; height: 14px; flex-shrink: 0;" class="hide-mobile">
                 <line x1="2" y1="12" x2="22" y2="12"></line>
                 <polyline points="17 7 22 12 17 17"></polyline>
               </svg>
@@ -5374,7 +5290,7 @@
               </div>
               <!-- Arrow -->
               <svg viewBox="0 0 24 24" fill="none" stroke="var(--c-accent)" stroke-width="2"
-                style="width: 14px; height: 14px; flex-shrink: 0;" class="flow-arrow flow-arrow--h">
+                style="width: 14px; height: 14px; flex-shrink: 0;" class="hide-mobile">
                 <line x1="2" y1="12" x2="22" y2="12"></line>
                 <polyline points="17 7 22 12 17 17"></polyline>
               </svg>
