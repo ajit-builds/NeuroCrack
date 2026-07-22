@@ -28,6 +28,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Section & Block Reveals
   SectionRevealEngine.init();
+
+  // Editorial Transition Animation Manager Architecture
+  EditorialTransitionAnimationManager.init();
 });
 
 
@@ -603,7 +606,7 @@ const SubscriberRevenueMatrix = {
 
     // Precompute diagonal indices and ranks
     const cols = this.GRID_COLS;
-    company.diagonalIndices = Array.from({length: totalActive}, (_, i) => i);
+    company.diagonalIndices = Array.from({ length: totalActive }, (_, i) => i);
     company.diagonalIndices.sort((a, b) => {
       const colA = a % cols;
       const rowA = Math.floor(a / cols);
@@ -1977,6 +1980,117 @@ const SectionRevealEngine = {
         observer.observe(b);
       }
     });
+  }
+};
+
+
+/**
+ * Editorial Transition Animation Manager (Architecture Phase)
+ * Scalable manager for tracking and managing editorial transition states (inactive, active, completed).
+ * Strictly isolated to approved figures: Figure 5.1, 5.4, 5.9, 7.3, 7.5.
+ */
+const EditorialTransitionAnimationManager = {
+  APPROVED_FIGURE_SELECTORS: [
+    '[data-editorial-figure="5.1"]',
+    '[data-editorial-figure="5.4"]',
+    '[data-editorial-figure="5.9"]',
+    '[data-editorial-figure="7.3"]',
+    '[data-editorial-figure="7.5"]'
+  ],
+
+  init() {
+    this.transitions = [];
+    this.activeTransitionIndex = -1;
+
+    // Locate transitions strictly within approved figures
+    const figureContainers = document.querySelectorAll(this.APPROVED_FIGURE_SELECTORS.join(', '));
+    figureContainers.forEach(container => {
+      const blocks = container.querySelectorAll('.editorial-transition-block');
+      blocks.forEach(block => {
+        // Attach architecture hooks and data attributes (visually static)
+        block.classList.add('editorial-transition', 'editorial-transition--inactive');
+        block.setAttribute('data-transition-state', 'inactive');
+        this.transitions.push({
+          element: block,
+          state: 'inactive'
+        });
+      });
+    });
+
+    // Phase 3: Drive the active (breathing) transition from scroll position
+    if (this.transitions.length) {
+      this.bindScrollTracking();
+    }
+  },
+
+  /**
+   * Tracks scroll position and hands off the breathing animation to the
+   * transition arrow the reader is currently passing, forward or backward.
+   * Mirrors the viewport-middle pattern already used elsewhere in this file.
+   */
+  bindScrollTracking() {
+    let ticking = false;
+    const handleScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        this.updateActiveFromScroll();
+        ticking = false;
+      });
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleScroll, { passive: true });
+
+    // Establish the correct active arrow for the initial scroll position
+    handleScroll();
+  },
+
+  updateActiveFromScroll() {
+    if (!this.transitions.length) return;
+
+    const viewportMiddle = window.scrollY + (window.innerHeight / 2);
+
+    // Find the furthest transition the reader has reached; it stays the
+    // active (breathing) one until the next transition is reached.
+    let nextActiveIndex = 0;
+    for (let i = 0; i < this.transitions.length; i++) {
+      const elTop = this.transitions[i].element.getBoundingClientRect().top + window.scrollY;
+      if (elTop <= viewportMiddle) {
+        nextActiveIndex = i;
+      } else {
+        break;
+      }
+    }
+
+    if (nextActiveIndex !== this.activeTransitionIndex) {
+      this.setActive(nextActiveIndex);
+    }
+  },
+
+  setActive(index) {
+    if (index < 0 || index >= this.transitions.length) return;
+    this.transitions.forEach((item, i) => {
+      if (i === index) {
+        this.setState(item, 'active');
+        this.activeTransitionIndex = i;
+      } else if (i < index) {
+        this.setState(item, 'completed');
+      } else {
+        this.setState(item, 'inactive');
+      }
+    });
+  },
+
+  setState(item, newState) {
+    item.state = newState;
+    item.element.setAttribute('data-transition-state', newState);
+    item.element.classList.remove(
+      'editorial-transition--inactive',
+      'editorial-transition--active',
+      'editorial-transition--completed'
+    );
+    item.element.classList.add(`editorial-transition--${newState}`);
   }
 };
 
