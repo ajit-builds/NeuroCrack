@@ -2636,12 +2636,15 @@ table {
   flex-shrink: 0 !important;
   transform: none !important;
   overflow: visible !important;
+  transition: filter 0.4s ease !important;
+  filter: drop-shadow(0 0 0px transparent) !important;
 }
 
 .editorial-transition-block__connector line,
 .editorial-transition-block__arrow line {
   stroke: var(--c-text-3) !important;
   stroke-width: 6.5px !important;
+  transition: stroke 0.4s ease !important;
 }
 
 .editorial-transition-block__connector polyline,
@@ -2650,6 +2653,7 @@ table {
   stroke-width: 7.5px !important;
   stroke-linecap: round !important;
   stroke-linejoin: round !important;
+  transition: stroke 0.4s ease !important;
 }
 
 /* ── Editorial Transition Architecture (State Hooks) ── */
@@ -2662,7 +2666,7 @@ table {
 }
 
 .editorial-transition--active {
-  /* Active state hook (reserved for future breathing animation) */
+  /* Active state hook */
 }
 
 .editorial-transition--completed {
@@ -2691,6 +2695,14 @@ table {
 .editorial-transition--active .editorial-transition-block__connector {
   animation: editorialArrowBreathe 3.2s ease-in-out infinite !important;
   transform-origin: center center !important;
+  filter: drop-shadow(0 0 4px #D8FF3E) drop-shadow(0 0 10px #D8FF3E) !important;
+}
+
+.editorial-transition--active .editorial-transition-block__arrow line,
+.editorial-transition--active .editorial-transition-block__arrow polyline,
+.editorial-transition--active .editorial-transition-block__connector line,
+.editorial-transition--active .editorial-transition-block__connector polyline {
+  stroke: #D8FF3E !important;
 }
 
 .editorial-transition--inactive .editorial-transition-block__arrow,
