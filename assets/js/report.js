@@ -1165,7 +1165,7 @@ const VideoCardManager = {
 
   renderComponent(block) {
     const rawUrl = block.getAttribute('data-youtube-url');
-    const videoId = block.getAttribute('data-video-id') || this.extractVideoId(rawUrl);
+    const videoId = block.getAttribute('data-visual-id') || block.getAttribute('data-video-id') || this.extractVideoId(rawUrl);
     const thumbnail = block.getAttribute('data-thumbnail') || '';
     const title = block.getAttribute('data-title') || '';
     const desc = block.getAttribute('data-desc') || '';
@@ -1218,13 +1218,18 @@ const VideoCardManager = {
   playVideo(wrapper) {
     if (this.activeWrapper === wrapper) return;
 
+    const videoBlock = wrapper.closest('.media-video');
+    if (!videoBlock) return;
+
+    if (videoBlock.getAttribute('data-synced') === 'true') {
+      SyncedVideoManager.playSyncedVideo(wrapper);
+      return;
+    }
+
     // 1. Stop any currently playing video
     if (this.activeWrapper) {
       this.stopVideo(this.activeWrapper);
     }
-
-    const videoBlock = wrapper.closest('.media-video');
-    if (!videoBlock) return;
 
     const videoId = videoBlock.getAttribute('data-video-id');
     if (!videoId) return;
@@ -1257,6 +1262,13 @@ const VideoCardManager = {
 
   stopVideo(wrapper) {
     const videoBlock = wrapper.closest('.media-video');
+    if (!videoBlock) return;
+
+    if (videoBlock.getAttribute('data-synced') === 'true') {
+      SyncedVideoManager.stopSyncedVideo(wrapper);
+      return;
+    }
+
     const playerContainer = wrapper.querySelector('.media-video__player');
     const previewContainer = wrapper.querySelector('.media-video__preview');
     if (!playerContainer || !previewContainer) return;
@@ -1275,6 +1287,313 @@ const VideoCardManager = {
     // 4. Reset active tracker
     if (this.activeWrapper === wrapper) {
       this.activeWrapper = null;
+    }
+  }
+};
+
+/**
+ * Synced Dual-Video Manager for YouTube IFrame API
+ * Manages dual YouTube players (visual muted, audio hidden) synchronized as one media experience.
+ * Uses lightweight event-driven sync to ensure smooth, continuous, uninterrupted audio playback.
+ */
+const SyncedVideoManager = {
+  visualPlayer: null,
+  audioPlayer: null,
+  apiReady: false,
+  syncInterval: null,
+  activeWrapper: null,
+
+  loadYouTubeApi(callback) {
+    if (window.YT && window.YT.Player) {
+      this.apiReady = true;
+      if (callback) callback();
+      return;
+    }
+
+    const prevCallback = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      this.apiReady = true;
+      if (prevCallback) prevCallback();
+      if (callback) callback();
+    };
+
+    if (!document.querySelector('script[src*="youtube.com/iframe_api"]')) {
+      const tag = document.createElement('script');
+      tag.src = 'https://www.youtube.com/iframe_api';
+      const firstScriptTag = document.getElementsByTagName('script')[0];
+      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
+  },
+
+  playSyncedVideo(wrapper) {
+    if (this.activeWrapper === wrapper && this.visualPlayer && this.audioPlayer) {
+      if (typeof this.visualPlayer.playVideo === 'function') {
+        this.visualPlayer.playVideo();
+      }
+      return;
+    }
+
+    // Stop any other active video in VideoCardManager
+    if (VideoCardManager.activeWrapper && VideoCardManager.activeWrapper !== wrapper) {
+      VideoCardManager.stopVideo(VideoCardManager.activeWrapper);
+    }
+
+    const videoBlock = wrapper.closest('.media-video');
+    if (!videoBlock) return;
+
+    this.activeWrapper = wrapper;
+    VideoCardManager.activeWrapper = wrapper;
+
+    const playerContainer = wrapper.querySelector('.media-video__player');
+    const previewContainer = wrapper.querySelector('.media-video__preview');
+    if (!playerContainer || !previewContainer) return;
+
+    const visualVideoId = videoBlock.getAttribute('data-visual-id') || 'k8jWPnC-Kx4';
+    const audioVideoId = videoBlock.getAttribute('data-audio-id') || 'BBz7-F9mdUE';
+    const startTime = parseInt(videoBlock.getAttribute('data-start-time') || '159', 10);
+    const endTime = parseInt(videoBlock.getAttribute('data-end-time') || '960', 10);
+    const duration = endTime - startTime;
+
+    const visualDivId = 'synced-visual-player-' + Date.now();
+    const audioDivId = 'synced-audio-player-' + Date.now();
+
+    playerContainer.innerHTML = `
+      <div id="${visualDivId}" style="width: 100%; height: 100%;"></div>
+      <div id="${audioDivId}" style="position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; overflow: hidden; top: -9999px; left: -9999px;"></div>
+    `;
+
+    previewContainer.classList.add('media-video__preview--hidden');
+    videoBlock.classList.add('media-video--active');
+
+    this.loadYouTubeApi(() => {
+      this.initPlayers(visualDivId, audioDivId, visualVideoId, audioVideoId, startTime, endTime, duration);
+    });
+  },
+
+  initPlayers(visualDivId, audioDivId, visualVideoId, audioVideoId, startTime, endTime, duration) {
+    if (this.visualPlayer) {
+      try { this.visualPlayer.destroy(); } catch (e) {}
+      this.visualPlayer = null;
+    }
+    if (this.audioPlayer) {
+      try { this.audioPlayer.destroy(); } catch (e) {}
+      this.audioPlayer = null;
+    }
+    this.stopSyncLoop();
+
+    let visualReady = false;
+    let audioReady = false;
+
+    const onBothReady = () => {
+      if (visualReady && audioReady) {
+        if (this.visualPlayer && typeof this.visualPlayer.mute === 'function') {
+          this.visualPlayer.mute();
+        }
+        if (this.audioPlayer && typeof this.audioPlayer.unMute === 'function') {
+          this.audioPlayer.unMute();
+        }
+
+        // Initial seek to start
+        this.visualPlayer.seekTo(startTime, true);
+        this.audioPlayer.seekTo(0, true);
+
+        // Start playing both
+        this.visualPlayer.playVideo();
+        this.audioPlayer.playVideo();
+        this.startSyncLoop(startTime, endTime, duration);
+      }
+    };
+
+    this.visualPlayer = new YT.Player(visualDivId, {
+      videoId: visualVideoId,
+      playerVars: {
+        autoplay: 1,
+        start: startTime,
+        end: endTime,
+        controls: 1,
+        modestbranding: 1,
+        rel: 0,
+        playsinline: 1,
+        enablejsapi: 1
+      },
+      events: {
+        onReady: () => {
+          visualReady = true;
+          onBothReady();
+        },
+        onStateChange: (event) => {
+          this.handleVisualStateChange(event, startTime, endTime, duration);
+        }
+      }
+    });
+
+    this.audioPlayer = new YT.Player(audioDivId, {
+      videoId: audioVideoId,
+      playerVars: {
+        autoplay: 0,
+        start: 0,
+        end: duration,
+        controls: 0,
+        disablekb: 1,
+        playsinline: 1,
+        enablejsapi: 1
+      },
+      events: {
+        onReady: () => {
+          audioReady = true;
+          onBothReady();
+        },
+        onStateChange: (event) => {
+          if (this.audioPlayer && typeof this.audioPlayer.unMute === 'function') {
+            this.audioPlayer.unMute();
+          }
+        }
+      }
+    });
+  },
+
+  handleVisualStateChange(event, startTime, endTime, duration) {
+    if (!this.visualPlayer || !this.audioPlayer) return;
+
+    if (event.data === YT.PlayerState.PLAYING) {
+      if (typeof this.visualPlayer.mute === 'function') this.visualPlayer.mute();
+      if (typeof this.audioPlayer.unMute === 'function') this.audioPlayer.unMute();
+
+      const visTime = typeof this.visualPlayer.getCurrentTime === 'function' ? this.visualPlayer.getCurrentTime() : startTime;
+
+      if (visTime >= endTime) {
+        this.pauseBoth();
+        return;
+      }
+
+      if (visTime < startTime) {
+        this.visualPlayer.seekTo(startTime, true);
+        this.audioPlayer.seekTo(0, true);
+      } else {
+        const expectedAudio = Math.max(0, visTime - startTime);
+        const audState = typeof this.audioPlayer.getPlayerState === 'function' ? this.audioPlayer.getPlayerState() : -1;
+
+        // Resume audio if not currently playing or buffering
+        if (audState !== YT.PlayerState.PLAYING && audState !== YT.PlayerState.BUFFERING) {
+          this.audioPlayer.seekTo(expectedAudio, true);
+          if (typeof this.audioPlayer.playVideo === 'function') {
+            this.audioPlayer.playVideo();
+          }
+        }
+      }
+
+      this.startSyncLoop(startTime, endTime, duration);
+    } else if (event.data === YT.PlayerState.PAUSED) {
+      if (typeof this.audioPlayer.pauseVideo === 'function') {
+        this.audioPlayer.pauseVideo();
+      }
+      this.stopSyncLoop();
+    } else if (event.data === YT.PlayerState.BUFFERING) {
+      const audState = typeof this.audioPlayer.getPlayerState === 'function' ? this.audioPlayer.getPlayerState() : -1;
+      if (audState === YT.PlayerState.PLAYING) {
+        if (typeof this.audioPlayer.pauseVideo === 'function') {
+          this.audioPlayer.pauseVideo();
+        }
+      }
+    } else if (event.data === YT.PlayerState.ENDED) {
+      this.pauseBoth();
+      this.visualPlayer.seekTo(startTime, true);
+      this.audioPlayer.seekTo(0, true);
+      this.stopSyncLoop();
+    }
+  },
+
+  startSyncLoop(startTime, endTime, duration) {
+    this.stopSyncLoop();
+    this.syncInterval = setInterval(() => {
+      this.performSyncCheck(startTime, endTime, duration);
+    }, 1000);
+  },
+
+  stopSyncLoop() {
+    if (this.syncInterval) {
+      clearInterval(this.syncInterval);
+      this.syncInterval = null;
+    }
+  },
+
+  performSyncCheck(startTime, endTime, duration) {
+    if (!this.visualPlayer || !this.audioPlayer) return;
+    if (typeof this.visualPlayer.getCurrentTime !== 'function' || typeof this.audioPlayer.getCurrentTime !== 'function') return;
+
+    const visState = typeof this.visualPlayer.getPlayerState === 'function' ? this.visualPlayer.getPlayerState() : -1;
+    if (visState !== YT.PlayerState.PLAYING) {
+      return;
+    }
+
+    const visTime = this.visualPlayer.getCurrentTime();
+
+    // Check boundary
+    if (visTime >= endTime) {
+      this.pauseBoth();
+      this.visualPlayer.seekTo(endTime, true);
+      this.audioPlayer.seekTo(duration, true);
+      this.stopSyncLoop();
+      return;
+    }
+
+    if (visTime < startTime) {
+      this.visualPlayer.seekTo(startTime, true);
+      this.audioPlayer.seekTo(0, true);
+      return;
+    }
+
+    const expectedAudioTime = visTime - startTime;
+    const actualAudioTime = this.audioPlayer.getCurrentTime();
+    const drift = Math.abs(actualAudioTime - expectedAudioTime);
+
+    // DRIFT THRESHOLD CHECK:
+    // If drift < 0.75 seconds: DO NOTHING (allow uninterrupted continuous audio).
+    // If drift >= 0.75 seconds: Perform ONE corrective seek.
+    if (drift >= 0.75) {
+      this.audioPlayer.seekTo(expectedAudioTime, true);
+    }
+
+    // Ensure audio plays if visual is playing and audio became paused
+    const audState = typeof this.audioPlayer.getPlayerState === 'function' ? this.audioPlayer.getPlayerState() : -1;
+    if (audState === YT.PlayerState.PAUSED || audState === YT.PlayerState.CUED) {
+      if (typeof this.audioPlayer.playVideo === 'function') {
+        this.audioPlayer.playVideo();
+      }
+    }
+  },
+
+  pauseBoth() {
+    if (this.visualPlayer && typeof this.visualPlayer.pauseVideo === 'function') {
+      this.visualPlayer.pauseVideo();
+    }
+    if (this.audioPlayer && typeof this.audioPlayer.pauseVideo === 'function') {
+      this.audioPlayer.pauseVideo();
+    }
+  },
+
+  stopSyncedVideo(wrapper) {
+    this.stopSyncLoop();
+    if (this.visualPlayer) {
+      try { this.visualPlayer.destroy(); } catch (e) {}
+      this.visualPlayer = null;
+    }
+    if (this.audioPlayer) {
+      try { this.audioPlayer.destroy(); } catch (e) {}
+      this.audioPlayer = null;
+    }
+
+    const videoBlock = wrapper.closest('.media-video');
+    const playerContainer = wrapper.querySelector('.media-video__player');
+    const previewContainer = wrapper.querySelector('.media-video__preview');
+
+    if (playerContainer) playerContainer.innerHTML = '';
+    if (previewContainer) previewContainer.classList.remove('media-video__preview--hidden');
+    if (videoBlock) videoBlock.classList.remove('media-video--active');
+
+    this.activeWrapper = null;
+    if (VideoCardManager.activeWrapper === wrapper) {
+      VideoCardManager.activeWrapper = null;
     }
   }
 };
